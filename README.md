@@ -2,7 +2,8 @@ This is a date package in the form of Cupertino and you can set the age limit of
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+![SheetPicker](https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker/assets/151648897/5ed512a7-e56e-46dc-b501-fbc14727a9e0)
+
 
 ## Getting started
 
