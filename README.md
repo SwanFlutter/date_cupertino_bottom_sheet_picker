@@ -9,7 +9,7 @@ This is a date package in the form of Cupertino and you can set the age limit of
 
 ```yaml
 dependencies:
-  date_cupertino_bottom_sheet_picker: ^0.0.3
+  date_cupertino_bottom_sheet_picker: ^0.0.3+1
 ```
 
 
