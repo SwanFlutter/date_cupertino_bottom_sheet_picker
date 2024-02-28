@@ -1,6 +1,6 @@
 name: date_cupertino_bottom_sheet_picker
 description: "This is a date package in the form of Cupertino and you can set the age limit of your users."
-version: 0.0.3+1
+version: 0.0.4
 homepage: "https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker.git"
 
 environment:
