@@ -1,5 +1,6 @@
 import 'package:date_cupertino_bottom_sheet_picker/date_cupertino_bottom_sheet_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:test_pack_date_cupertino/new.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,15 +40,29 @@ class Home extends StatelessWidget {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: DateCupertinoBottomSheetPicker(
-                width: 1.0,
+                minWidth: 1.0,
                 firstDate: DateTime(1990),
-                lastDate: DateTime(2050),
+                lastDate: DateTime.now(),
                 selectedDate: selectedDate,
                 minAge: 18,
+                textFieldDecoration: TextFieldDecoration(),
+                onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                  print("dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+                },
               ),
             ),
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const New()),
+          );
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
       ),
     );
   }

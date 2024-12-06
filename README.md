@@ -2,14 +2,36 @@ This is a date package in the form of Cupertino and you can set the age limit of
 
 ## Features
 
+
+
 ![SheetPicker](https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker/assets/151648897/5ed512a7-e56e-46dc-b501-fbc14727a9e0)
+
+```dart
+ Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: DateCupertinoBottomSheetPicker(
+                minWidth: 1.0,
+                firstDate: DateTime(1990),
+                lastDate: DateTime.now(),
+                selectedDate: selectedDate,
+                minAge: 18,
+                textFieldDecoration: TextFieldDecoration(),
+                onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                  print(
+                      "dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+                },
+              ),
+            ),
+          )
+```
 
 
 ## Getting started
 
 ```yaml
 dependencies:
-  date_cupertino_bottom_sheet_picker: ^0.0.4
+  date_cupertino_bottom_sheet_picker: ^0.0.5
 ```
 
 
