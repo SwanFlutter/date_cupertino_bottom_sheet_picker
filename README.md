@@ -114,28 +114,14 @@ class PickerTest extends StatelessWidget {
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               child: DateCupertinoBottomSheetPicker(
-                width: 1.0, // Changed width 0 to 1.0
-                firstDate: DateTime(1950),
+                minWidth: 1.0,
+                firstDate: DateTime(1990),
                 lastDate: DateTime.now(),
-                selectedDate: controller.selectedDate,
-                labelText: 'Date of birth...',
-                labelTaxtColor: Colors.white,
-                 hintColor: Colors.white,
-                iconColor: Colors.white,
-                minAge: 12,
-                 height: 26,
-                paddingVertical: 0,
-                borderRadius: 8.0,
-                cursorColor: Colors.white,
-                style: const TextStyle(color: Colors.white),
-                borderColor: Colors.white,
-                focusedBorderColor: Colors.white,
-                enabledBorderColor: Colors.white,
-                 onChanged: (dateTime) {
-                controller.selectedDate = dateTime;
-                controller.dateBirth.text = dateTime.toString();
-                debugPrint("Date of birth: $dateTime");
-                debugPrint(controller.dateBirth.text);
+                selectedDate: selectedDate,
+                minAge: 18,
+                textFieldDecoration: TextFieldDecoration(),
+                onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                  print("dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
                 },
               ),
             ),
