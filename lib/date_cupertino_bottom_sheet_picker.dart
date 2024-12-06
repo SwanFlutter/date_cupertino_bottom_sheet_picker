@@ -15,7 +15,8 @@ export 'package:date_cupertino_bottom_sheet_picker/src/widget/global/confirm_but
 export 'package:date_cupertino_bottom_sheet_picker/src/widget/global/text_feild_config.dart';
 
 /// A callback function that is called when the date changes.
-typedef OnDateChange = void Function(DateTime dateTime, String formattedDate, String formattedDateWithDay);
+typedef OnDateChange = void Function(
+    DateTime dateTime, String formattedDate, String formattedDateWithDay);
 
 /// A widget that displays a Cupertino-style date picker in a bottom sheet.
 class DateCupertinoBottomSheetPicker extends StatefulWidget {
@@ -118,7 +119,8 @@ class DateCupertinoBottomSheetPicker extends StatefulWidget {
         firstDate = firstDate ?? DateTime(1960, 1, 1),
         lastDate = lastDate ??= DateTime(2060),
         border = border ?? const OutlineInputBorder(),
-        shapeBottomSheet = shapeBottomSheet ?? OutlineInputBorder(borderRadius: BorderRadius.circular(18.0)),
+        shapeBottomSheet = shapeBottomSheet ??
+            OutlineInputBorder(borderRadius: BorderRadius.circular(18.0)),
         super();
 
   static Widget datePickerPersian({
@@ -209,7 +211,9 @@ class DateCupertinoBottomSheetPicker extends StatefulWidget {
     final double? elevation = 20,
 
     /// The border radius for the bottom sheet.
-    final ShapeBorder? shapeBottomSheet = const OutlineInputBorder(borderRadius: BorderRadius.only(topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0))),
+    final ShapeBorder? shapeBottomSheet = const OutlineInputBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0))),
 
     /// The background color for the bottom sheet.
     final Color? backgroundColorBottomSheet = Colors.white,
@@ -245,7 +249,8 @@ class DateCupertinoBottomSheetPicker extends StatefulWidget {
     final String timeText = 'What time?',
 
     /// The text style for the time.
-    final TextStyle? timeTextStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+    final TextStyle? timeTextStyle = const TextStyle(
+        fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
   }) {
     return DateTimePickerGregorian(
       height: height,
@@ -349,10 +354,13 @@ class DateCupertinoBottomSheetPicker extends StatefulWidget {
   }
 
   @override
-  State<DateCupertinoBottomSheetPicker> createState() => _DateCupertinoBottomSheetPickerState();
+  State<DateCupertinoBottomSheetPicker> createState() =>
+      _DateCupertinoBottomSheetPickerState();
 }
 
-class _DateCupertinoBottomSheetPickerState extends State<DateCupertinoBottomSheetPicker> with TickerProviderStateMixin {
+class _DateCupertinoBottomSheetPickerState
+    extends State<DateCupertinoBottomSheetPicker>
+    with TickerProviderStateMixin {
   TextEditingController controller = TextEditingController();
   late DateTime currentDate;
 
@@ -379,37 +387,57 @@ class _DateCupertinoBottomSheetPickerState extends State<DateCupertinoBottomShee
           readOnly: true,
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
-          style: widget.textFieldDecoration?.style ?? TextStyle(color: Colors.black),
+          style: widget.textFieldDecoration?.style ??
+              TextStyle(color: Colors.black),
           cursorColor: widget.textFieldDecoration?.cursorColor,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: widget.textFieldDecoration?.height ?? 15.0, horizontal: 10),
+            contentPadding: EdgeInsets.symmetric(
+                vertical: widget.textFieldDecoration?.height ?? 15.0,
+                horizontal: 10),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.borderColor ?? Colors.black, width: widget.textFieldDecoration?.widthBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color:
+                      widget.textFieldDecoration?.borderColor ?? Colors.black,
+                  width: widget.textFieldDecoration?.widthBorder ?? 1.0),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.focusedBorderColor ?? Colors.black, width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color: widget.textFieldDecoration?.focusedBorderColor ??
+                      Colors.black,
+                  width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.enabledBorderColor ?? Colors.black, width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color: widget.textFieldDecoration?.enabledBorderColor ??
+                      Colors.black,
+                  width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
             ),
             fillColor: widget.textFieldDecoration?.fillColor ?? Colors.white,
             filled: widget.textFieldDecoration?.filled ?? true,
-            errorStyle: TextStyle(color: widget.textFieldDecoration?.errorColor),
+            errorStyle:
+                TextStyle(color: widget.textFieldDecoration?.errorColor),
             hintText: widget.textFieldDecoration?.hintText,
             hintStyle: TextStyle(color: widget.textFieldDecoration?.hintColor),
             labelText: widget.textFieldDecoration?.labelText,
-            labelStyle: TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
+            labelStyle:
+                TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
             errorText: widget.textFieldDecoration?.errorText,
             prefix: Text(
               widget.textFieldDecoration?.prefix ?? '',
             ),
-            prefixStyle: widget.textFieldDecoration?.prefixStyle ?? TextStyle(fontSize: 20, color: Colors.black),
+            prefixStyle: widget.textFieldDecoration?.prefixStyle ??
+                TextStyle(fontSize: 20, color: Colors.black),
             suffixIcon: InkResponse(
               onTap: onShowCalendarClick,
-              child: Icon(widget.textFieldDecoration?.icon ?? Icons.calendar_month, color: widget.textFieldDecoration?.iconColor ?? Colors.black),
+              child: Icon(
+                  widget.textFieldDecoration?.icon ?? Icons.calendar_month,
+                  color: widget.textFieldDecoration?.iconColor ?? Colors.black),
             ),
           ),
         ),
@@ -418,13 +446,17 @@ class _DateCupertinoBottomSheetPickerState extends State<DateCupertinoBottomShee
   }
 
   void onShowCalendarClick() async {
-    final aCtr = AnimationController(vsync: this, duration: const Duration(seconds: 1), reverseDuration: const Duration(seconds: 1));
+    final aCtr = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 1),
+        reverseDuration: const Duration(seconds: 1));
 
     final res = await showModalBottomSheet(
       isScrollControlled: true,
       transitionAnimationController: aCtr,
       elevation: widget.elevation,
-      backgroundColor: widget.backgroundColorBottomSheet ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor: widget.backgroundColorBottomSheet ??
+          Theme.of(context).colorScheme.inversePrimary,
       shape: widget.shapeBottomSheet,
       context: context,
       builder: (BuildContext context) {
@@ -441,7 +473,8 @@ class _DateCupertinoBottomSheetPickerState extends State<DateCupertinoBottomShee
     if (res is DateTime) {
       currentDate = res;
       controller.text = currentDate.toString().split(' ')[0];
-      widget.onTimeChanged?.call(currentDate, currentDate.formatFullDate(), currentDate.formatFullDateWithDay());
+      widget.onTimeChanged?.call(currentDate, currentDate.formatFullDate(),
+          currentDate.formatFullDateWithDay());
     }
   }
 }
@@ -477,9 +510,12 @@ class _CalendarViewState extends State<CalendarView> {
   void initState() {
     currentDate = widget.selectedDate;
 
-    yearController = FixedExtentScrollController(initialItem: getSelectedYearIndex(currentDate));
-    monthController = FixedExtentScrollController(initialItem: getSelectedMonthIndex(currentDate));
-    dayController = FixedExtentScrollController(initialItem: getSelectedDayIndex(currentDate));
+    yearController = FixedExtentScrollController(
+        initialItem: getSelectedYearIndex(currentDate));
+    monthController = FixedExtentScrollController(
+        initialItem: getSelectedMonthIndex(currentDate));
+    dayController = FixedExtentScrollController(
+        initialItem: getSelectedDayIndex(currentDate));
 
     super.initState();
   }
@@ -499,12 +535,17 @@ class _CalendarViewState extends State<CalendarView> {
             padding: const EdgeInsets.only(top: 15.0),
             child: Text(
               DateFormat('yyyy-MM-dd').format(currentDate.toLocal()),
-              style: const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
+              style:
+                  const TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
               textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 10),
-          Divider(thickness: 1, indent: 0, endIndent: 0, color: widget.dateCupertinoBottomSheetPicker.dividerColor),
+          Divider(
+              thickness: 1,
+              indent: 0,
+              endIndent: 0,
+              color: widget.dateCupertinoBottomSheetPicker.dividerColor),
           Expanded(
             child: SizedBox(
               width: size.width * 0.9,
@@ -549,17 +590,21 @@ class _CalendarViewState extends State<CalendarView> {
                       itemExtent: 40,
                       onSelectedItemChanged: (value) async {
                         final beforeDay = getSelectedDayIndex(currentDate);
-                        int dayCount = getDaysInMonth(currentDate.year, value + 1).length;
+                        int dayCount =
+                            getDaysInMonth(currentDate.year, value + 1).length;
                         if (dayCount <= beforeDay) {
-                          final days = getDaysInMonth(currentDate.year, value + 1);
-                          currentDate = DateTime(currentDate.year, value + 1, days.last);
+                          final days =
+                              getDaysInMonth(currentDate.year, value + 1);
+                          currentDate =
+                              DateTime(currentDate.year, value + 1, days.last);
                           dayController.animateToItem(
                             days.length - 1,
                             curve: Curves.bounceIn,
                             duration: const Duration(milliseconds: 300),
                           );
                         } else {
-                          currentDate = DateTime(currentDate.year, value + 1, currentDate.day);
+                          currentDate = DateTime(
+                              currentDate.year, value + 1, currentDate.day);
                         }
                         setState(() {});
                       },
@@ -581,19 +626,24 @@ class _CalendarViewState extends State<CalendarView> {
                       diameterRatio: 1.0,
                       itemExtent: 40,
                       onSelectedItemChanged: (value) async {
-                        currentDate = DateTime(currentDate.year, currentDate.month, value + 1);
+                        currentDate = DateTime(
+                            currentDate.year, currentDate.month, value + 1);
                         setState(() {});
                       },
                       itemBuilder: (context, index) {
                         return Container(
                           alignment: Alignment.center,
                           child: Text(
-                            getDaysInMonth(currentDate.year, currentDate.month)[index].toString(),
+                            getDaysInMonth(
+                                    currentDate.year, currentDate.month)[index]
+                                .toString(),
                             style: const TextStyle(fontSize: 16.0),
                           ),
                         );
                       },
-                      childCount: getDaysInMonth(currentDate.year, currentDate.month).length,
+                      childCount:
+                          getDaysInMonth(currentDate.year, currentDate.month)
+                              .length,
                     ),
                   ),
                 ],
@@ -602,13 +652,15 @@ class _CalendarViewState extends State<CalendarView> {
           ),
           const Divider(thickness: 1),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
                   child: MaterialButton(
-                    shape: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0)),
                     height: 50,
                     child: const Text('Cancel'),
                     onPressed: () => Navigator.pop(context),
@@ -617,7 +669,8 @@ class _CalendarViewState extends State<CalendarView> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: MaterialButton(
-                    shape: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0)),
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0)),
                     color: Theme.of(context).primaryColor,
                     height: 50,
                     child: const Text('Selected'),
@@ -696,7 +749,20 @@ class _CalendarViewState extends State<CalendarView> {
   }
 
   List<String> getMonths() {
-    return ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    return [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
   }
 
   String getMonthName(int month) {

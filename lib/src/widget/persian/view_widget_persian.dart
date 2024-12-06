@@ -57,7 +57,8 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
 
   @override
   Widget build(BuildContext context) {
-    final double progress = _pageController.hasClients ? (_pageController.page ?? 0) : 0;
+    final double progress =
+        _pageController.hasClients ? (_pageController.page ?? 0) : 0;
     ThemeData themeData = Theme.of(context);
     var widgets = widget.widget;
     Size size = MediaQuery.of(context).size;
@@ -130,10 +131,13 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
               right: 16,
               child: GestureDetector(
                 onTap: () {
-                  _pageController.animateToPage(1, duration: const Duration(milliseconds: 700), curve: Curves.ease);
+                  _pageController.animateToPage(1,
+                      duration: const Duration(milliseconds: 700),
+                      curve: Curves.ease);
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: themeData.primaryColor,
@@ -168,9 +172,12 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                         minWidth: minWidth,
                         height: buttonHeight,
                         color: widgets.cancelButtonConfig?.color ?? Colors.red,
-                        shape: widgets.cancelButtonConfig?.shape ?? const StadiumBorder(),
+                        shape: widgets.cancelButtonConfig?.shape ??
+                            const StadiumBorder(),
                         onPressed: () {
-                          _pageController.animateToPage(0, duration: const Duration(milliseconds: 700), curve: Curves.ease);
+                          _pageController.animateToPage(0,
+                              duration: const Duration(milliseconds: 700),
+                              curve: Curves.ease);
                         },
                         child: Text(
                           widgets.cancelButtonConfig?.text ?? 'بازگشت',
@@ -183,10 +190,13 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                       MaterialButton(
                         minWidth: minWidth,
                         height: buttonHeight,
-                        color: widgets.confirmButtonConfig?.color ?? Colors.blue,
-                        shape: widgets.confirmButtonConfig?.shape ?? const StadiumBorder(),
+                        color:
+                            widgets.confirmButtonConfig?.color ?? Colors.blue,
+                        shape: widgets.confirmButtonConfig?.shape ??
+                            const StadiumBorder(),
                         onPressed: () {
-                          String formattedTime = '${widget.selectedTime.hour}:${widget.selectedTime.minute.toString().padLeft(2, '0')} ${widget.selectedTime.period == DayPeriod.am ? 'صبح' : 'بعد از ظهر'}';
+                          String formattedTime =
+                              '${widget.selectedTime.hour}:${widget.selectedTime.minute.toString().padLeft(2, '0')} ${widget.selectedTime.period == DayPeriod.am ? 'صبح' : 'بعد از ظهر'}';
                           Navigator.of(context).pop({
                             'date': widget.currentDate,
                             'time': formattedTime,

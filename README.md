@@ -2,13 +2,7 @@ This is a date package in the form of Cupertino and you can set the age limit of
 
 ## Features
 
-
-
 ![SheetPicker](https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker/assets/151648897/5ed512a7-e56e-46dc-b501-fbc14727a9e0)
-![persian1](https://github.com/user-attachments/assets/3cb98fa6-2e37-4317-a430-70966be2af28)![persian](https://github.com/user-attachments/assets/4dc68077-5e35-4812-9dca-dab19775d6b6)
-
-![gregorian1](https://github.com/user-attachments/assets/a59e25be-75e3-4bff-be88-2e7f481b04e1)![gregorian](https://github.com/user-attachments/assets/73669ab1-a6e7-4d97-bc14-c44824dcc12b)
-
 
 
 ```dart
@@ -23,13 +17,66 @@ This is a date package in the form of Cupertino and you can set the age limit of
                 minAge: 18,
                 textFieldDecoration: TextFieldDecoration(),
                 onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
-                  print(
-                      "dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+                  print("dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
                 },
               ),
             ),
           )
 ```
+
+
+
+![persian1](https://github.com/user-attachments/assets/3cb98fa6-2e37-4317-a430-70966be2af28)
+
+
+```dart
+
+ DateCupertinoBottomSheetPicker.dateTimePickerPersian(
+      minWidth: 0.9,
+       onDateAndTimeChanged: (dateTime, formattedDate, formattedDateWithDay, timeOfDay, timeOfDayString, timeOfDayPersianString) {
+        print(
+                    "dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay, timeOfDay: $timeOfDay, timeOfDayString: $timeOfDayString , timeOfDayPersianString: $timeOfDayPersianString");
+},
+
+```
+
+
+![persian](https://github.com/user-attachments/assets/4dc68077-5e35-4812-9dca-dab19775d6b6)
+
+```dart
+
+ DateCupertinoBottomSheetPicker.datePickerPersian(
+              minWidth: 0.9,
+              onChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                print("dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+              },
+            ),
+
+```
+
+![gregorian1](https://github.com/user-attachments/assets/a59e25be-75e3-4bff-be88-2e7f481b04e1)
+
+```dart
+
+
+
+```
+
+
+![gregorian](https://github.com/user-attachments/assets/73669ab1-a6e7-4d97-bc14-c44824dcc12b)
+
+
+```dart
+
+  DateCupertinoBottomSheetPicker.dateTimePickerGregorian(
+              minWidth: 0.9,
+              onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                print("dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+              },
+            )
+
+```
+
 
 
 ## Getting started

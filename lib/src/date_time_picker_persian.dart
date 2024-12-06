@@ -17,8 +17,29 @@ extension JalaliExtensionsTime on Jalali {
   /// Formats the Jalali date into a full Persian date string including the day name.
   /// Example output: "شنبه 01 فروردین 74"
   String formatPersianFullDateWithDay() {
-    final persianDayNames = ['شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'];
-    final persianMonthNames = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    final persianDayNames = [
+      'شنبه',
+      'یک‌شنبه',
+      'دوشنبه',
+      'سه‌شنبه',
+      'چهارشنبه',
+      'پنج‌شنبه',
+      'جمعه'
+    ];
+    final persianMonthNames = [
+      'فروردین',
+      'اردیبهشت',
+      'خرداد',
+      'تیر',
+      'مرداد',
+      'شهریور',
+      'مهر',
+      'آبان',
+      'آذر',
+      'دی',
+      'بهمن',
+      'اسفند'
+    ];
     final dayOfWeek = toDateTime().weekday % 7;
     final f = NumberFormat("00", "fa");
     return '${persianDayNames[dayOfWeek]} ${f.format(day)} ${persianMonthNames[month - 1]} ${f.format(year % 100)}';
@@ -64,7 +85,13 @@ extension TimeOfDayExtension on TimeOfDay {
 }
 
 /// A callback type for handling date and time changes.
-typedef OnDateAndTimeChange = void Function(Jalali dateTime, String formattedDate, String formattedDateWithDay, TimeOfDay timeOfDay, String timeOfDayString, String timeOfDayPersianString);
+typedef OnDateAndTimeChange = void Function(
+    Jalali dateTime,
+    String formattedDate,
+    String formattedDateWithDay,
+    TimeOfDay timeOfDay,
+    String timeOfDayString,
+    String timeOfDayPersianString);
 
 /// A customizable Persian date and time picker widget.
 class DateTimePickerPersian extends StatefulWidget {
@@ -139,14 +166,16 @@ class DateTimePickerPersian extends StatefulWidget {
     this.confirmButtonConfig,
     this.cancelButtonConfig,
     this.timeText = 'چه ساعتی؟',
-    this.timeTextStyle = const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
+    this.timeTextStyle = const TextStyle(
+        fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
     this.onDateAndTimeChanged,
     this.minWidth = 0.9,
   })  : selectedDate = selectedDate ?? Jalali(1374, 1, 1),
         firstDate = firstDate ?? Jalali(1300, 1, 1),
         lastDate = lastDate ?? Jalali(1450, 1, 1),
         border = border ?? const OutlineInputBorder(),
-        shapeBottomSheet = shapeBottomSheet ?? RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        shapeBottomSheet = shapeBottomSheet ??
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
         super();
 
   @override
@@ -192,37 +221,57 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
           readOnly: true,
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
-          style: widget.textFieldDecoration?.style ?? TextStyle(color: Colors.black),
+          style: widget.textFieldDecoration?.style ??
+              TextStyle(color: Colors.black),
           cursorColor: widget.textFieldDecoration?.cursorColor,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: widget.textFieldDecoration?.height ?? 15.0, horizontal: 10),
+            contentPadding: EdgeInsets.symmetric(
+                vertical: widget.textFieldDecoration?.height ?? 15.0,
+                horizontal: 10),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.borderColor ?? Colors.black, width: widget.textFieldDecoration?.widthBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color:
+                      widget.textFieldDecoration?.borderColor ?? Colors.black,
+                  width: widget.textFieldDecoration?.widthBorder ?? 1.0),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.focusedBorderColor ?? Colors.black, width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color: widget.textFieldDecoration?.focusedBorderColor ??
+                      Colors.black,
+                  width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(color: widget.textFieldDecoration?.enabledBorderColor ?? Colors.black, width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              borderSide: BorderSide(
+                  color: widget.textFieldDecoration?.enabledBorderColor ??
+                      Colors.black,
+                  width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
             ),
             fillColor: widget.textFieldDecoration?.fillColor ?? Colors.white,
             filled: widget.textFieldDecoration?.filled ?? true,
-            errorStyle: TextStyle(color: widget.textFieldDecoration?.errorColor),
+            errorStyle:
+                TextStyle(color: widget.textFieldDecoration?.errorColor),
             hintText: widget.textFieldDecoration?.hintText,
             hintStyle: TextStyle(color: widget.textFieldDecoration?.hintColor),
             labelText: widget.textFieldDecoration?.labelText,
-            labelStyle: TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
+            labelStyle:
+                TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
             errorText: widget.textFieldDecoration?.errorText,
             prefix: Text(
               widget.textFieldDecoration?.prefix ?? '',
             ),
-            prefixStyle: widget.textFieldDecoration?.prefixStyle ?? TextStyle(fontSize: 20, color: Colors.black),
+            prefixStyle: widget.textFieldDecoration?.prefixStyle ??
+                TextStyle(fontSize: 20, color: Colors.black),
             suffixIcon: InkResponse(
               onTap: () => onShowCalendarClick(context),
-              child: Icon(widget.textFieldDecoration?.icon ?? Icons.calendar_month, color: widget.textFieldDecoration?.iconColor ?? Colors.black),
+              child: Icon(
+                  widget.textFieldDecoration?.icon ?? Icons.calendar_month,
+                  color: widget.textFieldDecoration?.iconColor ?? Colors.black),
             ),
           ),
         ),
@@ -236,7 +285,8 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
       isScrollControlled: true,
       isDismissible: true,
       elevation: widget.elevation,
-      backgroundColor: widget.backgroundColorBottomSheet ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor: widget.backgroundColorBottomSheet ??
+          Theme.of(context).colorScheme.inversePrimary,
       shape: widget.shapeBottomSheet,
       builder: (BuildContext context) {
         return ViewWidgetPersian(
@@ -248,7 +298,9 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
       },
     );
 
-    if (result != null && result.containsKey('date') && result.containsKey('time')) {
+    if (result != null &&
+        result.containsKey('date') &&
+        result.containsKey('time')) {
       setState(
         () {
           currentDate = result['date'] as Jalali;
@@ -262,7 +314,13 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
 // Convert dateString to Jalali for use in callback
 
 // Call callback with correct Jalali
-          widget.onDateAndTimeChanged?.call(currentDate, currentDate.formatFullDate(), currentDate.formatPersianFullDateWithDay(), selectedTime, selectedTime.formatPersianTime(), selectedTime.formatPersianTimeNew());
+          widget.onDateAndTimeChanged?.call(
+              currentDate,
+              currentDate.formatFullDate(),
+              currentDate.formatPersianFullDateWithDay(),
+              selectedTime,
+              selectedTime.formatPersianTime(),
+              selectedTime.formatPersianTimeNew());
         },
       );
     }
