@@ -659,21 +659,53 @@ class _CalendarViewState extends State<CalendarView> {
               children: [
                 Expanded(
                   child: MaterialButton(
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0)),
-                    height: 50,
-                    child: const Text('Cancel'),
+                    shape: widget.dateCupertinoBottomSheetPicker
+                            .cancelButtonConfig?.shape ??
+                        OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0)),
+                    height: widget.dateCupertinoBottomSheetPicker
+                            .cancelButtonConfig?.height ??
+                        50,
+                    minWidth: widget.dateCupertinoBottomSheetPicker
+                            .cancelButtonConfig?.minWidth ??
+                        double.infinity,
+                    color: widget.dateCupertinoBottomSheetPicker
+                        .cancelButtonConfig?.color,
+                    child: Text(
+                      widget.dateCupertinoBottomSheetPicker.cancelButtonConfig
+                              ?.text ??
+                          'Cancel',
+                      style: widget.dateCupertinoBottomSheetPicker
+                              .cancelButtonConfig?.style ??
+                          const TextStyle(color: Colors.black),
+                    ),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: MaterialButton(
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0)),
-                    color: Theme.of(context).primaryColor,
-                    height: 50,
-                    child: const Text('Selected'),
+                    shape: widget.dateCupertinoBottomSheetPicker
+                            .confirmButtonConfig?.shape ??
+                        OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0)),
+                    color: widget.dateCupertinoBottomSheetPicker
+                            .confirmButtonConfig?.color ??
+                        Theme.of(context).primaryColor,
+                    height: widget.dateCupertinoBottomSheetPicker
+                            .confirmButtonConfig?.height ??
+                        50,
+                    minWidth: widget.dateCupertinoBottomSheetPicker
+                            .confirmButtonConfig?.minWidth ??
+                        double.infinity,
+                    child: Text(
+                      widget.dateCupertinoBottomSheetPicker.confirmButtonConfig
+                              ?.text ??
+                          'Selected',
+                      style: widget.dateCupertinoBottomSheetPicker
+                              .confirmButtonConfig?.style ??
+                          const TextStyle(color: Colors.white),
+                    ),
                     onPressed: () => Navigator.pop(context, currentDate),
                   ),
                 ),

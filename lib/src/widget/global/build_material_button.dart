@@ -12,7 +12,7 @@ Widget buildMaterialButton(
     height: height,
     minWidth: minWidth,
     color: color,
-    shape: const StadiumBorder(),
+    shape: shape ?? const StadiumBorder(),
     onPressed: onPressed,
     child: Text(
       text,

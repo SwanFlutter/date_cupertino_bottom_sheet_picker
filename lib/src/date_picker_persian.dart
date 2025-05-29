@@ -467,13 +467,13 @@ class _PersianCalendarViewState extends State<PersianCalendarView> {
           Expanded(
             flex: 3,
             child: buildMaterialButton(
-              height: widget.widget.confirmButtonConfig?.height ?? 55,
-              minWidth: widget.widget.confirmButtonConfig?.minWidth ??
-                  double.infinity,
-              color: widget.widget.confirmButtonConfig?.color ?? Colors.red,
+              height: widget.widget.cancelButtonConfig?.height ?? 55,
+              minWidth:
+                  widget.widget.cancelButtonConfig?.minWidth ?? double.infinity,
+              color: widget.widget.cancelButtonConfig?.color ?? Colors.red,
               text: widget.widget.cancelButtonConfig?.text ?? 'بازگشت',
               onPressed: () => Navigator.of(context).pop(),
-              shape: widget.widget.confirmButtonConfig?.shape ??
+              shape: widget.widget.cancelButtonConfig?.shape ??
                   const StadiumBorder(),
               style: widget.widget.cancelButtonConfig?.style ??
                   const TextStyle(color: Colors.white),
@@ -513,7 +513,7 @@ class _PersianCalendarViewState extends State<PersianCalendarView> {
       height: height,
       minWidth: minWidth,
       color: color,
-      shape: const StadiumBorder(),
+      shape: shape ?? const StadiumBorder(),
       onPressed: onPressed,
       child: Text(
         text,

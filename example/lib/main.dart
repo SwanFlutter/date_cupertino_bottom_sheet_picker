@@ -47,7 +47,7 @@ class Home extends StatelessWidget {
                 minAge: 18,
                 textFieldDecoration: TextFieldDecoration(),
                 onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
-                  print(
+                  debugPrint(
                       "dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
                 },
               ),
