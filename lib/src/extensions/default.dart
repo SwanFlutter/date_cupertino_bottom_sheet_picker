@@ -65,28 +65,37 @@ extension DefaultExtension on Object {
   }
 
   TimeOfDay stringToTimeOfDay(String timeString) {
-// Remove extra spaces and convert to lowercase
+    // Remove extra spaces and convert to lowercase
     timeString = timeString.trim().toLowerCase();
+    debugPrint('Converting time string: "$timeString"');
 
-// Separate time and period (AM/PM)
+    // Separate time and period (AM/PM)
     List<String> parts = timeString.split(' ');
     String timePart = parts[0];
-    String? period = parts.length > 1 ? parts[1] : null;
+    String? period = parts.length > 1 ? parts[1].toLowerCase() : null;
 
-// Separate hour and minute
+    // Separate hour and minute
     List<String> timeComponents = timePart.split(':');
     int hour = int.parse(timeComponents[0]);
     int minute = int.parse(timeComponents[1]);
 
-// Set the time based on the period (AM/PM)
+    debugPrint(
+        'Parsed time components: hour=$hour, minute=$minute, period=$period');
+
+    // Set the time based on the period (AM/PM)
     if (period != null) {
-      if ((period == 'PM' || period == 'pm') && hour != 12) {
-        hour += 12;
-      } else if ((period == 'Morning' || period == 'am') && hour == 12) {
-        hour = 0;
+      if (period == 'pm' || period == 'بعد' || period == 'بعد از ظهر') {
+        if (hour < 12) {
+          hour += 12; // Convert to 24-hour format for PM
+        }
+      } else if (period == 'am' || period == 'صبح') {
+        if (hour == 12) {
+          hour = 0; // 12 AM is 0 in 24-hour format
+        }
       }
     }
 
+    debugPrint('Converted to 24-hour format: hour=$hour, minute=$minute');
     return TimeOfDay(hour: hour, minute: minute);
   }
 

@@ -18,6 +18,9 @@ class ConfirmButtonConfig {
   /// The text style for the button's text.
   final TextStyle? style;
 
+  /// The color for the time button.
+  final Color? timeColorBottom;
+
   ConfirmButtonConfig({
     this.height = 40,
     this.text = "انتخاب",
@@ -25,5 +28,6 @@ class ConfirmButtonConfig {
     this.color = Colors.blue,
     this.shape = const StadiumBorder(),
     this.style = const TextStyle(color: Colors.white),
+    this.timeColorBottom,
   });
 }

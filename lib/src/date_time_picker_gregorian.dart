@@ -68,6 +68,8 @@ class DateTimePickerGregorian extends StatefulWidget {
   /// The text for the time.
   final String timeText;
 
+  final Color? timeColorBottom;
+
   /// The text style for the time.
   final TextStyle? timeTextStyle;
 
@@ -115,6 +117,7 @@ class DateTimePickerGregorian extends StatefulWidget {
     this.confirmButtonConfig,
     this.cancelButtonConfig,
     this.timeText = 'What time?',
+    this.timeColorBottom,
     this.timeTextStyle = const TextStyle(
         fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
   })  : selectedDate = selectedDate ?? DateTime(1995, 4, 21),
@@ -138,9 +141,7 @@ class _DateTimePickerGregorianState extends State<DateTimePickerGregorian>
   @override
   void initState() {
     currentDate = widget.selectedDate;
-    controller = TextEditingController();
-    // controller.text = widget.selectedDate.toString().split(' ')[0];
-    selectedTime = TimeOfDay.now();
+    selectedTime = TimeOfDay.fromDateTime(widget.selectedDate);
     controller.text = viewFormatDateTimeFor(currentDate, selectedTime);
 
     super.initState();
@@ -165,52 +166,48 @@ class _DateTimePickerGregorianState extends State<DateTimePickerGregorian>
           cursorColor: widget.textFieldDecoration?.cursorColor,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-                vertical: widget.textFieldDecoration?.height ?? 15.0,
-                horizontal: 10),
+              vertical: widget.textFieldDecoration?.height ?? 15.0,
+              horizontal: 10,
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(
                   widget.textFieldDecoration?.borderRadius ?? 12.0),
               borderSide: BorderSide(
-                  color:
-                      widget.textFieldDecoration?.borderColor ?? Colors.black,
-                  width: widget.textFieldDecoration?.widthBorder ?? 1.0),
+                color: widget.textFieldDecoration?.borderColor ?? Colors.black,
+                width: widget.textFieldDecoration?.widthBorder ?? 1.0,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(
                   widget.textFieldDecoration?.borderRadius ?? 12.0),
               borderSide: BorderSide(
-                  color: widget.textFieldDecoration?.focusedBorderColor ??
-                      Colors.black,
-                  width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
+                color: widget.textFieldDecoration?.focusedBorderColor ??
+                    Colors.black,
+                width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(
                   widget.textFieldDecoration?.borderRadius ?? 12.0),
               borderSide: BorderSide(
-                  color: widget.textFieldDecoration?.enabledBorderColor ??
-                      Colors.black,
-                  width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
+                color: widget.textFieldDecoration?.enabledBorderColor ??
+                    Colors.black,
+                width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0,
+              ),
             ),
             fillColor: widget.textFieldDecoration?.fillColor ?? Colors.white,
             filled: widget.textFieldDecoration?.filled ?? true,
-            errorStyle:
-                TextStyle(color: widget.textFieldDecoration?.errorColor),
             hintText: widget.textFieldDecoration?.hintText,
             hintStyle: TextStyle(color: widget.textFieldDecoration?.hintColor),
             labelText: widget.textFieldDecoration?.labelText,
             labelStyle:
                 TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
-            errorText: widget.textFieldDecoration?.errorText,
-            prefix: Text(
-              widget.textFieldDecoration?.prefix ?? '',
-            ),
-            prefixStyle: widget.textFieldDecoration?.prefixStyle ??
-                TextStyle(fontSize: 20, color: Colors.black),
             suffixIcon: InkResponse(
               onTap: onShowCalendarClick,
               child: Icon(
-                  widget.textFieldDecoration?.icon ?? Icons.calendar_month,
-                  color: widget.textFieldDecoration?.iconColor ?? Colors.black),
+                widget.textFieldDecoration?.icon ?? Icons.calendar_month,
+                color: widget.textFieldDecoration?.iconColor ?? Colors.black,
+              ),
             ),
           ),
         ),
@@ -220,9 +217,10 @@ class _DateTimePickerGregorianState extends State<DateTimePickerGregorian>
 
   void onShowCalendarClick() async {
     final aCtr = AnimationController(
-        vsync: this,
-        duration: const Duration(seconds: 1),
-        reverseDuration: const Duration(seconds: 1));
+      vsync: this,
+      duration: const Duration(seconds: 1),
+      reverseDuration: const Duration(seconds: 1),
+    );
 
     final res = await showModalBottomSheet(
       isScrollControlled: true,
@@ -243,13 +241,20 @@ class _DateTimePickerGregorianState extends State<DateTimePickerGregorian>
     );
 
     if (res is DateTime) {
-      currentDate = res;
-      // استفاده از متد viewFormatDateTimeFor برای آپدیت متن
-      TimeOfDay selectedTime = TimeOfDay.fromDateTime(res);
-      controller.text = viewFormatDateTimeFor(currentDate, selectedTime);
+      setState(() {
+        currentDate = res;
+        selectedTime = TimeOfDay(hour: res.hour, minute: res.minute);
+        controller.text = viewFormatDateTimeFor(currentDate, selectedTime);
+      });
 
-      widget.onTimeChanged?.call(currentDate, currentDate.formatFullDate(),
-          currentDate.formatFullDateWithDay());
+      widget.onTimeChanged?.call(
+        currentDate,
+        currentDate.formatFullDate(),
+        currentDate.formatFullDateWithDay(),
+      );
+    } else {
+      debugPrint(
+          "onShowCalendarClick - Modal returned null or invalid type: $res");
     }
   }
 }
@@ -560,9 +565,11 @@ class _ViewWidgetGregorianState extends State<ViewWidgetGregorian> {
                       lastDate: widgets.lastDate,
                       dateCupertinoBottomSheetPicker: widget.dateTimePickerGregorian,
                       onChange: (DateTime dateTime) {
-                        setState(() {
-                          widget.currentDate = dateTime;
-                        });
+                        if (widget.currentDate != dateTime) {
+                          setState(() {
+                            widget.currentDate = dateTime;
+                          });
+                        }
                       },
                     ),
                     DateAndTimeGregorian(
@@ -574,12 +581,13 @@ class _ViewWidgetGregorianState extends State<ViewWidgetGregorian> {
                       firstDate: widgets.firstDate,
                       lastDate: widgets.lastDate,
                       minAge: widgets.minAge,
-                      onTimeChanged: (TimeOfDay newTime) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                      onTimeChanged: (TimeOfDay newTime, DateTime newDate) {
+                        if (widget.selectedTime != newTime || widget.currentDate != newDate) {
                           setState(() {
                             widget.selectedTime = newTime;
+                            widget.currentDate = newDate;
                           });
-                        });
+                        }
                       },
                       dateCupertinoBottomSheetPicker: widget.dateTimePickerGregorian,
                     ),

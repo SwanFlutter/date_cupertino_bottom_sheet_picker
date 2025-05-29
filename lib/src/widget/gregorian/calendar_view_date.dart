@@ -53,10 +53,15 @@ class _CalendarViewDateState extends State<CalendarViewDate> {
 
   @override
   void didUpdateWidget(covariant CalendarViewDate oldWidget) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.onChange(currentDate);
-    });
     super.didUpdateWidget(oldWidget);
+    // Only update if the selected date actually changed
+    if (widget.selectedDate != oldWidget.selectedDate) {
+      currentDate = widget.selectedDate;
+      // Update controllers to reflect the new date
+      yearController.jumpToItem(getSelectedYearIndex(currentDate));
+      monthController.jumpToItem(getSelectedMonthIndex(currentDate));
+      dayController.jumpToItem(getSelectedDayIndex(currentDate));
+    }
   }
 
   @override
@@ -99,15 +104,20 @@ class _CalendarViewDateState extends State<CalendarViewDate> {
                       onSelectedItemChanged: (value) async {
                         final y = getYears()[value];
                         final m = currentDate.month;
+                        DateTime newDate;
                         int dayCount = getDaysInMonth(y, m).length;
                         if (dayCount <= getSelectedDayIndex(currentDate)) {
                           final days = getDaysInMonth(y, m);
-                          currentDate = DateTime(y, m, days.last);
+                          newDate = DateTime(y, m, days.last);
                           dayController.jumpToItem(days.length - 1);
                         } else {
-                          currentDate = DateTime(y, m, currentDate.day);
+                          newDate = DateTime(y, m, currentDate.day);
                         }
-                        setState(() {});
+                        if (currentDate != newDate) {
+                          currentDate = newDate;
+                          setState(() {});
+                          widget.onChange(currentDate);
+                        }
                       },
                       itemBuilder: (context, index) {
                         return Container(
@@ -128,12 +138,13 @@ class _CalendarViewDateState extends State<CalendarViewDate> {
                       itemExtent: 40,
                       onSelectedItemChanged: (value) async {
                         final beforeDay = getSelectedDayIndex(currentDate);
+                        DateTime newDate;
                         int dayCount =
                             getDaysInMonth(currentDate.year, value + 1).length;
                         if (dayCount <= beforeDay) {
                           final days =
                               getDaysInMonth(currentDate.year, value + 1);
-                          currentDate =
+                          newDate =
                               DateTime(currentDate.year, value + 1, days.last);
                           dayController.animateToItem(
                             days.length - 1,
@@ -141,10 +152,14 @@ class _CalendarViewDateState extends State<CalendarViewDate> {
                             duration: const Duration(milliseconds: 300),
                           );
                         } else {
-                          currentDate = DateTime(
+                          newDate = DateTime(
                               currentDate.year, value + 1, currentDate.day);
                         }
-                        setState(() {});
+                        if (currentDate != newDate) {
+                          currentDate = newDate;
+                          setState(() {});
+                          widget.onChange(currentDate);
+                        }
                       },
                       itemBuilder: (context, index) {
                         return Container(
@@ -164,9 +179,13 @@ class _CalendarViewDateState extends State<CalendarViewDate> {
                       diameterRatio: 1.0,
                       itemExtent: 40,
                       onSelectedItemChanged: (value) async {
-                        currentDate = DateTime(
+                        DateTime newDate = DateTime(
                             currentDate.year, currentDate.month, value + 1);
-                        setState(() {});
+                        if (currentDate != newDate) {
+                          currentDate = newDate;
+                          setState(() {});
+                          widget.onChange(currentDate);
+                        }
                       },
                       itemBuilder: (context, index) {
                         return Container(

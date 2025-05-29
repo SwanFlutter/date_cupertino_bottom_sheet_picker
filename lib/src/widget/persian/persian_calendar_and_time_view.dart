@@ -34,12 +34,30 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
   void initState() {
     super.initState();
     currentDate = widget.selectedDate;
+
+    // Log the initial date
+    debugPrint("PersianDatePicker initState - Initial date: $currentDate");
+
+    // Initialize the controllers
     yearController = FixedExtentScrollController(
         initialItem: getSelectedYearIndex(currentDate));
     monthController = FixedExtentScrollController(
         initialItem: getSelectedMonthIndex(currentDate));
     dayController = FixedExtentScrollController(
         initialItem: getSelectedDayIndex(currentDate));
+  }
+
+  @override
+  void didUpdateWidget(PersianDatePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Update the current date and controllers if the selected date has changed
+    if (widget.selectedDate != oldWidget.selectedDate) {
+      currentDate = widget.selectedDate;
+      yearController.jumpToItem(getSelectedYearIndex(currentDate));
+      monthController.jumpToItem(getSelectedMonthIndex(currentDate));
+      dayController.jumpToItem(getSelectedDayIndex(currentDate));
+    }
   }
 
   @override
@@ -58,6 +76,7 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
               onSelectedItemChanged: (value) {
                 final y = getYears()[value];
                 final m = currentDate.month;
+
                 int dayCount = getDaysInMonth(y, m).length;
                 if (dayCount <= getSelectedDayIndex(currentDate)) {
                   final days = getDaysInMonth(y, m);
@@ -65,6 +84,7 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
                 } else {
                   currentDate = Jalali(y, m, currentDate.day);
                 }
+
                 widget.onDateChanged(currentDate);
                 setState(() {});
               },
@@ -86,6 +106,7 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
               onSelectedItemChanged: (value) {
                 final m = getMonths()[value];
                 final y = currentDate.year;
+
                 int dayCount = getDaysInMonth(y, m).length;
                 if (dayCount <= getSelectedDayIndex(currentDate)) {
                   final days = getDaysInMonth(y, m);
@@ -93,6 +114,7 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
                 } else {
                   currentDate = Jalali(y, m, currentDate.day);
                 }
+
                 widget.onDateChanged(currentDate);
                 setState(() {});
               },
@@ -115,7 +137,9 @@ class _PersianDatePickerState extends State<PersianDatePicker> {
                 final d = getDays()[value];
                 final y = currentDate.year;
                 final m = currentDate.month;
+
                 currentDate = Jalali(y, m, d);
+
                 widget.onDateChanged(currentDate);
                 setState(() {});
               },
@@ -207,12 +231,98 @@ class _PersianTimePickerState extends State<PersianTimePicker> {
   @override
   void initState() {
     super.initState();
-    final timeParts = widget.initialTime.split(':');
-    selectedHour = int.parse(timeParts[0]);
-    selectedMinute = int.parse(timeParts[1]);
-    isAM = selectedHour < 12;
-    hourController = FixedExtentScrollController(initialItem: selectedHour);
-    minuteController = FixedExtentScrollController(initialItem: selectedMinute);
+    try {
+      final timeParts = widget.initialTime.split(':');
+      int rawHour = int.parse(timeParts[0]);
+
+      // Safeguard against invalid format
+      final minuteAndPeriod = timeParts[1].split(' ');
+      selectedMinute = int.parse(minuteAndPeriod[0]);
+
+      // Check for AM/PM
+      String period = minuteAndPeriod.length > 1 ? minuteAndPeriod[1] : '';
+      isAM = period == 'صبح';
+
+      // Convert 24-hour format to 12-hour format for display
+      if (rawHour == 0) {
+        selectedHour = 12; // 0 hour in 24-hour format is 12 AM
+        isAM = true;
+      } else if (rawHour == 12) {
+        selectedHour = 12; // 12 hour in 24-hour format is 12 PM
+        isAM = false;
+      } else if (rawHour > 12) {
+        selectedHour = rawHour - 12; // Convert PM hours
+        isAM = false;
+      } else {
+        selectedHour = rawHour; // AM hours stay the same
+        isAM = true;
+      }
+
+      // Override AM/PM if explicitly specified
+      if (period == 'بعد از ظهر') {
+        isAM = false;
+      } else if (period == 'صبح') {
+        isAM = true;
+      }
+
+      // Ensure selectedHour is between 1-12 for the picker
+      if (selectedHour == 0) selectedHour = 12;
+      if (selectedHour > 12) selectedHour = selectedHour % 12;
+      if (selectedHour == 0) selectedHour = 12;
+
+      // Initialize controllers with correct positions
+      hourController =
+          FixedExtentScrollController(initialItem: (selectedHour - 1) % 12);
+      minuteController =
+          FixedExtentScrollController(initialItem: selectedMinute);
+    } catch (e) {
+      // Fallback to default time in case of error
+      selectedHour = 12;
+      selectedMinute = 0;
+      isAM = true;
+      hourController = FixedExtentScrollController(initialItem: 0);
+      minuteController = FixedExtentScrollController(initialItem: 0);
+    }
+  }
+
+  @override
+  void didUpdateWidget(PersianTimePicker oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialTime != oldWidget.initialTime) {
+      try {
+        final timeParts = widget.initialTime.split(':');
+        int rawHour = int.parse(timeParts[0]);
+        final minuteAndPeriod = timeParts[1].split(' ');
+        selectedMinute = int.parse(minuteAndPeriod[0]);
+        String period = minuteAndPeriod.length > 1 ? minuteAndPeriod[1] : '';
+        isAM = period == 'صبح';
+
+        if (rawHour == 0) {
+          selectedHour = 12;
+          isAM = true;
+        } else if (rawHour == 12) {
+          selectedHour = 12;
+          isAM = false;
+        } else if (rawHour > 12) {
+          selectedHour = rawHour - 12;
+          isAM = false;
+        } else {
+          selectedHour = rawHour;
+          isAM = true;
+        }
+
+        if (period == 'بعد از ظهر') {
+          isAM = false;
+        } else if (period == 'صبح') {
+          isAM = true;
+        }
+
+        hourController.jumpToItem((selectedHour - 1) % 12);
+        minuteController.jumpToItem(selectedMinute);
+      } catch (e) {
+        // Handle error silently
+      }
+    }
   }
 
   @override
@@ -230,19 +340,15 @@ class _PersianTimePickerState extends State<PersianTimePicker> {
               itemExtent: 60,
               onSelectedItemChanged: (value) {
                 setState(() {
-                  selectedHour = isAM
-                      ? value
-                      : value + 13; // تنظیم ساعت برای صبح یا بعد از ظهر
+                  selectedHour = value + 1;
                   updateTime();
                 });
               },
-              childCount: isAM ? 13 : 12, // تعداد ساعت‌های قابل نمایش
+              childCount: 12,
               itemBuilder: (context, index) {
-                final hour =
-                    isAM ? index : index + 13; // تعیین ساعت بر اساس حالت
                 return Center(
                   child: Text(
-                    convertToPersianDigits(hour),
+                    convertToPersianDigits(index + 1),
                     style: const TextStyle(fontSize: 18),
                   ),
                 );
@@ -273,6 +379,8 @@ class _PersianTimePickerState extends State<PersianTimePicker> {
           Expanded(
             child: CupertinoPicker(
               itemExtent: 60,
+              scrollController:
+                  FixedExtentScrollController(initialItem: isAM ? 0 : 1),
               onSelectedItemChanged: (value) {
                 setState(() {
                   isAM = value == 0;
@@ -292,10 +400,22 @@ class _PersianTimePickerState extends State<PersianTimePicker> {
   }
 
   void updateTime() {
-    final formattedHour = selectedHour.toString().padLeft(2, '0');
+    // Convert 12-hour format to 24-hour format
+    final hour = (isAM && selectedHour == 12)
+        ? 0 // 12 AM is 00 in 24-hour format
+        : (!isAM && selectedHour < 12)
+            ? selectedHour + 12 // PM hours add 12 (except 12 PM)
+            : selectedHour; // AM hours and 12 PM stay as is
+
+    // Format the time string
+    final formattedHour = hour.toString().padLeft(2, '0');
     final formattedMinute = selectedMinute.toString().padLeft(2, '0');
     final period = isAM ? 'صبح' : 'بعد از ظهر';
+
+    // Create the time string in the format "HH:MM صبح/بعد از ظهر"
     final timeString = '$formattedHour:$formattedMinute $period';
+
+    // Pass the formatted time string to the callback
     widget.onTimeChanged(timeString);
   }
 }

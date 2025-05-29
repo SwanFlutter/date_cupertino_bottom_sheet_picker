@@ -34,6 +34,9 @@ class TimeAndDatePersian extends StatefulWidget {
   /// A callback function that is called when the time is changed.
   final Function(TimeOfDay) onTimeChanged;
 
+  /// A callback function that is called when the date is changed.
+  final Function(Jalali)? onDateChanged;
+
   /// The date and time combined.
   final String timeAndDate;
 
@@ -48,6 +51,7 @@ class TimeAndDatePersian extends StatefulWidget {
   /// - [minAge]: The minimum age that can be selected.
   /// - [dividerColor]: The color of the divider.
   /// - [onTimeChanged]: A callback function that is called when the time is changed.
+  /// - [onDateChanged]: A callback function that is called when the date is changed.
   /// - [timeAndDate]: The date and time combined.
   TimeAndDatePersian({
     super.key,
@@ -59,6 +63,7 @@ class TimeAndDatePersian extends StatefulWidget {
     required this.minAge,
     required this.dividerColor,
     required this.onTimeChanged,
+    this.onDateChanged,
     required this.timeAndDate,
   });
 
@@ -68,34 +73,55 @@ class TimeAndDatePersian extends StatefulWidget {
 
 class _TimeAndDatePersianState extends State<TimeAndDatePersian> {
   late String displayTimeAndDate;
+  late Jalali _currentDate;
+  late TimeOfDay _selectedTime;
+  static bool animationHasRunOnce = false;
 
   @override
   void initState() {
     super.initState();
-    displayTimeAndDate = widget.timeAndDate;
+    _currentDate = widget.currentDate;
+    _selectedTime = widget.selectedTime;
+    displayTimeAndDate = formatDateTimeForIranNew(_currentDate, _selectedTime);
+  }
+
+  @override
+  void didUpdateWidget(TimeAndDatePersian oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentDate != oldWidget.currentDate ||
+        widget.selectedTime != oldWidget.selectedTime) {
+      _currentDate = widget.currentDate;
+      _selectedTime = widget.selectedTime;
+      displayTimeAndDate =
+          formatDateTimeForIranNew(_currentDate, _selectedTime);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
+    Widget dateTimeWidget;
+    if (!animationHasRunOnce) {
+      dateTimeWidget = FadeAnimationDelayed(
+        delay: const Duration(milliseconds: 700),
+        slideDirection: SlideDirection.rightToLeft,
+        child: buildDateTimeText(theme),
+        onCompleted: () {
+          animationHasRunOnce = true;
+        },
+      );
+    } else {
+      dateTimeWidget = buildDateTimeText(theme);
+    }
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FadeAnimationDelayed(
-            delay: const Duration(milliseconds: 700),
-            slideDirection: SlideDirection.rightToLeft,
-            child: Text(
-              displayTimeAndDate,
-              style: TextStyle(
-                  fontSize: theme.textTheme.headlineSmall!.fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.primary),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          dateTimeWidget,
           SizedBox(height: 10),
           Divider(
               thickness: 1,
@@ -110,13 +136,16 @@ class _TimeAndDatePersianState extends State<TimeAndDatePersian> {
               onTimeChanged: (String timeString) {
                 TimeOfDay time = stringToTimeOfDay(timeString);
                 widget.onTimeChanged(time);
-                setState(() {
-                  widget.selectedTime = time;
-                  displayTimeAndDate =
-                      formatDateTimeForIran(widget.currentDate, time);
-                });
+                if (mounted) {
+                  setState(() {
+                    _selectedTime = time;
+                    displayTimeAndDate =
+                        formatDateTimeForIranNew(_currentDate, time);
+                  });
+                }
               },
-              initialTime: "8:00",
+              initialTime:
+                  "${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')} ${_selectedTime.period == DayPeriod.am ? 'صبح' : 'بعد از ظهر'}",
             ),
           ),
           SizedBox(height: 10),
@@ -127,19 +156,37 @@ class _TimeAndDatePersianState extends State<TimeAndDatePersian> {
               endIndent: 0),
           SizedBox(height: 10),
           PersianDatePicker(
-            selectedDate: widget.selectedDate,
+            selectedDate: _currentDate,
             firstDate: widget.firstDate,
             lastDate: widget.lastDate,
             minAge: widget.minAge,
             dividerColor: widget.dividerColor,
             onDateChanged: (Jalali jalali) {
-              setState(() {
-                widget.currentDate = jalali;
-              });
+              if (mounted) {
+                setState(() {
+                  _currentDate = jalali;
+                  widget.currentDate = jalali;
+                  displayTimeAndDate =
+                      formatDateTimeForIranNew(jalali, _selectedTime);
+                });
+                // Notify parent widget about the date change
+                widget.onDateChanged?.call(jalali);
+              }
             },
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildDateTimeText(ThemeData theme) {
+    return Text(
+      displayTimeAndDate,
+      style: TextStyle(
+          fontSize: theme.textTheme.headlineSmall!.fontSize,
+          fontWeight: FontWeight.w600,
+          color: theme.colorScheme.primary),
+      textAlign: TextAlign.center,
     );
   }
 }

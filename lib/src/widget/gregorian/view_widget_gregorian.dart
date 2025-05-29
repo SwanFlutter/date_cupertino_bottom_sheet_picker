@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:date_cupertino_bottom_sheet_picker/src/date_time_picker_gregorian.dart';
+import 'package:date_cupertino_bottom_sheet_picker/src/extensions/default.dart';
 import 'package:date_cupertino_bottom_sheet_picker/src/widget/gregorian/calendar_view_date.dart';
 import 'package:date_cupertino_bottom_sheet_picker/src/widget/gregorian/date_and_time_gregorian.dart';
-import 'package:fade_animation_delayed/fade_animation_delayed.dart';
 import 'package:flutter/material.dart';
 
 /// [ViewWidgetGregorian] is a widget that displays a date and time.
@@ -44,14 +44,32 @@ class ViewWidgetGregorian extends StatefulWidget {
 
 class _ViewWidgetGregorianState extends State<ViewWidgetGregorian> {
   late PageController _pageController;
+  late DateTime _modalCurrentDate;
+  late TimeOfDay _modalSelectedTime;
+  late String _modalTimeAndDateString;
 
   @override
   void initState() {
+    super.initState();
+    _modalCurrentDate = widget.currentDate;
+    _modalSelectedTime = widget.selectedTime;
+    _modalTimeAndDateString = viewFormatDateTimeFor(
+      _modalCurrentDate,
+      _modalSelectedTime,
+    );
     _pageController = PageController()
       ..addListener(() {
-        setState(() {});
+        // Only rebuild if page actually changed
+        if (mounted) {
+          setState(() {});
+        }
       });
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,131 +111,137 @@ class _ViewWidgetGregorianState extends State<ViewWidgetGregorian> {
                   children: [
                     CalendarViewDate(
                       minAge: widgets.minAge,
-                      selectedDate: widgets.selectedDate,
+                      selectedDate: _modalCurrentDate,
                       firstDate: widgets.firstDate,
                       lastDate: widgets.lastDate,
-                      dateCupertinoBottomSheetPicker:
-                          widget.dateTimePickerGregorian,
+                      dateCupertinoBottomSheetPicker: widgets,
                       onChange: (DateTime dateTime) {
                         setState(() {
-                          widget.currentDate = dateTime;
+                          _modalCurrentDate = dateTime;
+                          _modalTimeAndDateString = viewFormatDateTimeFor(
+                            _modalCurrentDate,
+                            _modalSelectedTime,
+                          );
                         });
                       },
                     ),
                     DateAndTimeGregorian(
-                      timeAndDate: widget.timeAndDate,
-                      selectedTime: widget.selectedTime,
-                      currentDate: widget.currentDate,
+                      timeAndDate: _modalTimeAndDateString,
+                      selectedTime: _modalSelectedTime,
+                      currentDate: _modalCurrentDate,
                       dividerColor: widgets.dividerColor,
-                      selectedDate: widget.currentDate,
+                      selectedDate: _modalCurrentDate,
                       firstDate: widgets.firstDate,
                       lastDate: widgets.lastDate,
                       minAge: widgets.minAge,
-                      onTimeChanged: (TimeOfDay newTime) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                      onTimeChanged: (TimeOfDay newTime, DateTime newDate) {
+                        if (_modalSelectedTime != newTime ||
+                            _modalCurrentDate != newDate) {
                           setState(() {
-                            widget.selectedTime = newTime;
+                            _modalSelectedTime = newTime;
+                            _modalCurrentDate = newDate;
+                            _modalTimeAndDateString = viewFormatDateTimeFor(
+                              _modalCurrentDate,
+                              _modalSelectedTime,
+                            );
                           });
-                        });
+                        }
                       },
-                      dateCupertinoBottomSheetPicker:
-                          widget.dateTimePickerGregorian,
+                      dateCupertinoBottomSheetPicker: widgets,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          if (progress == 0) // دکمه "Get Time" فقط در صفحه اول
+          if (progress == 0)
             Positioned(
               bottom: 16,
               left: 16,
               right: 16,
               child: GestureDetector(
                 onTap: () {
-                  _pageController.animateToPage(1,
-                      duration: const Duration(milliseconds: 700),
-                      curve: Curves.ease);
+                  _pageController
+                      .animateToPage(
+                        1,
+                        duration: const Duration(milliseconds: 700),
+                        curve: Curves.ease,
+                      )
+                      .then((_) {});
                 },
                 child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 16,
+                    horizontal: 24,
+                  ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: themeData.primaryColor,
+                    color: widgets.timeColorBottom ?? themeData.primaryColor,
                   ),
                   child: Center(
-                    child: Text(
-                      widgets.timeText,
-                      style: widgets.timeTextStyle,
-                    ),
+                    child: Text(widgets.timeText, style: widgets.timeTextStyle),
                   ),
                 ),
               ),
             ),
-          if (progress == 1)
+          if (progress == 1.0)
             Positioned(
               bottom: 16,
               left: 16,
               right: 16,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: FadeAnimationDelayed(
-                  delay: const Duration(milliseconds: 0),
-                  slideDirection: SlideDirection.rightToLeft,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      MaterialButton(
-                        minWidth: minWidth,
-                        height: buttonHeight,
-                        color: widgets.cancelButtonConfig?.color ?? Colors.red,
-                        shape: widgets.cancelButtonConfig?.shape ??
-                            const StadiumBorder(),
-                        onPressed: () {
-                          _pageController.animateToPage(0,
-                              duration: const Duration(milliseconds: 700),
-                              curve: Curves.ease);
-                        },
-                        child: Text(
-                          widgets.cancelButtonConfig?.text ?? 'Cancel',
-                          style: widgets.cancelButtonConfig?.style ??
-                              const TextStyle(
-                                color: Colors.white,
-                              ),
-                        ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    MaterialButton(
+                      minWidth:
+                          widgets.cancelButtonConfig?.minWidth ?? minWidth,
+                      height:
+                          widgets.cancelButtonConfig?.height ?? buttonHeight,
+                      color: widgets.cancelButtonConfig?.color ?? Colors.red,
+                      shape: widgets.cancelButtonConfig?.shape ??
+                          const StadiumBorder(),
+                      onPressed: () {
+                        _pageController.animateToPage(
+                          0,
+                          duration: const Duration(milliseconds: 700),
+                          curve: Curves.ease,
+                        );
+                      },
+                      child: Text(
+                        widgets.cancelButtonConfig?.text ?? 'Cancel',
+                        style: widgets.cancelButtonConfig?.style ??
+                            const TextStyle(color: Colors.white),
                       ),
-                      MaterialButton(
-                        minWidth: minWidth,
-                        height: buttonHeight,
-                        color:
-                            widgets.confirmButtonConfig?.color ?? Colors.blue,
-                        shape: widgets.confirmButtonConfig?.shape ??
-                            const StadiumBorder(),
-                        onPressed: () {
-                          // فرمت زمان را به درستی تنظیم کنیم
-                          //    String formattedTime = '${widget.selectedTime.hour}:${widget.selectedTime.minute.toString().padLeft(2, '0')}';
-
-                          // ترکیب تاریخ و زمان
-                          DateTime combinedDateTime = DateTime(
-                              widget.currentDate.year,
-                              widget.currentDate.month,
-                              widget.currentDate.day,
-                              widget.selectedTime.hour,
-                              widget.selectedTime.minute);
-
-                          Navigator.of(context).pop(combinedDateTime);
-                        },
-                        child: Text(
-                          widgets.confirmButtonConfig?.text ?? "Select",
-                          style: widgets.confirmButtonConfig?.style ??
-                              const TextStyle(
-                                color: Colors.white,
-                              ),
-                        ),
+                    ),
+                    MaterialButton(
+                      minWidth:
+                          widgets.confirmButtonConfig?.minWidth ?? minWidth,
+                      height:
+                          widgets.confirmButtonConfig?.height ?? buttonHeight,
+                      color: widgets.confirmButtonConfig?.color ?? Colors.blue,
+                      shape: widgets.confirmButtonConfig?.shape ??
+                          const StadiumBorder(),
+                      onPressed: () {
+                        DateTime combinedDateTime = DateTime(
+                          _modalCurrentDate.year,
+                          _modalCurrentDate.month,
+                          _modalCurrentDate.day,
+                          _modalSelectedTime.hour,
+                          _modalSelectedTime.minute,
+                        );
+                        debugPrint(
+                            "Returning combined date/time: $combinedDateTime (date: $_modalCurrentDate, time: $_modalSelectedTime)");
+                        Navigator.of(context).pop(combinedDateTime);
+                      },
+                      child: Text(
+                        widgets.confirmButtonConfig?.text ?? "Select",
+                        style: widgets.confirmButtonConfig?.style ??
+                            const TextStyle(color: Colors.white),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

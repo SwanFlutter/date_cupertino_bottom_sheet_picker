@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:date_cupertino_bottom_sheet_picker/src/date_time_picker_persian.dart';
+import 'package:date_cupertino_bottom_sheet_picker/src/extensions/default.dart';
 import 'package:date_cupertino_bottom_sheet_picker/src/widget/persian/persian_calendar_and_time_view.dart';
 import 'package:date_cupertino_bottom_sheet_picker/src/widget/persian/time_and_date_persian.dart';
 import 'package:fade_animation_delayed/fade_animation_delayed.dart';
@@ -45,14 +46,48 @@ class ViewWidgetPersian extends StatefulWidget {
 
 class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
   late PageController _pageController;
+  late String displayTimeAndDate;
+  late Jalali _currentDate;
+  late TimeOfDay _selectedTime;
 
   @override
   void initState() {
+    super.initState();
+
+    // Initialize local state variables with the values from the widget
+    _currentDate = widget.currentDate;
+    _selectedTime = widget.selectedTime;
+
+    // Initialize the display text
+    displayTimeAndDate = formatDateTimeForIranNew(_currentDate, _selectedTime);
+
+    // Initialize the page controller
     _pageController = PageController()
       ..addListener(() {
-        setState(() {});
+        setState(() {
+          if (_pageController.page == 1) {
+            // Update the display text when the page changes to the second page
+            displayTimeAndDate =
+                formatDateTimeForIranNew(_currentDate, _selectedTime);
+          }
+        });
       });
-    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ViewWidgetPersian oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Update the local state variables if the widget values have changed
+    if (widget.currentDate != oldWidget.currentDate ||
+        widget.selectedTime != oldWidget.selectedTime) {
+      setState(() {
+        _currentDate = widget.currentDate;
+        _selectedTime = widget.selectedTime;
+        displayTimeAndDate =
+            formatDateTimeForIranNew(_currentDate, _selectedTime);
+      });
+    }
   }
 
   @override
@@ -93,29 +128,43 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                   controller: _pageController,
                   children: [
                     PersianDatePicker(
-                      selectedDate: widgets.selectedDate,
+                      selectedDate: _currentDate,
                       firstDate: widgets.firstDate,
                       lastDate: widgets.lastDate,
                       minAge: widgets.minAge,
                       dividerColor: widgets.dividerColor,
                       onDateChanged: (Jalali jalali) {
                         setState(() {
+                          _currentDate = jalali;
                           widget.currentDate = jalali;
+                          displayTimeAndDate =
+                              formatDateTimeForIranNew(jalali, _selectedTime);
                         });
                       },
                     ),
                     TimeAndDatePersian(
-                      timeAndDate: widget.timeAndDate,
-                      selectedTime: widget.selectedTime,
-                      currentDate: widget.currentDate,
+                      timeAndDate: displayTimeAndDate,
+                      selectedTime: _selectedTime,
+                      currentDate: _currentDate,
                       dividerColor: widgets.dividerColor,
-                      selectedDate: widget.currentDate,
+                      selectedDate: _currentDate,
                       firstDate: widgets.firstDate,
                       lastDate: widgets.lastDate,
                       minAge: widgets.minAge,
                       onTimeChanged: (TimeOfDay newTime) {
                         setState(() {
+                          _selectedTime = newTime;
                           widget.selectedTime = newTime;
+                          displayTimeAndDate =
+                              formatDateTimeForIranNew(_currentDate, newTime);
+                        });
+                      },
+                      onDateChanged: (Jalali newDate) {
+                        setState(() {
+                          _currentDate = newDate;
+                          widget.currentDate = newDate;
+                          displayTimeAndDate =
+                              formatDateTimeForIranNew(newDate, _selectedTime);
                         });
                       },
                     ),
@@ -124,13 +173,17 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
               ),
             ],
           ),
-          if (progress == 0) // دکمه "Get Time" فقط در صفحه اول
+          if (progress == 0)
             Positioned(
               bottom: 16,
               left: 16,
               right: 16,
               child: GestureDetector(
                 onTap: () {
+                  setState(() {
+                    displayTimeAndDate =
+                        formatDateTimeForIranNew(_currentDate, _selectedTime);
+                  });
                   _pageController.animateToPage(1,
                       duration: const Duration(milliseconds: 700),
                       curve: Curves.ease);
@@ -140,7 +193,7 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: themeData.primaryColor,
+                    color: widgets.timeColorBottom ?? themeData.primaryColor,
                   ),
                   child: Center(
                     child: Text(
@@ -169,8 +222,10 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       MaterialButton(
-                        minWidth: minWidth,
-                        height: buttonHeight,
+                        minWidth:
+                            widgets.cancelButtonConfig?.minWidth ?? minWidth,
+                        height:
+                            widgets.cancelButtonConfig?.height ?? buttonHeight,
                         color: widgets.cancelButtonConfig?.color ?? Colors.red,
                         shape: widgets.cancelButtonConfig?.shape ??
                             const StadiumBorder(),
@@ -188,17 +243,25 @@ class _ViewWidgetPersianState extends State<ViewWidgetPersian> {
                         ),
                       ),
                       MaterialButton(
-                        minWidth: minWidth,
-                        height: buttonHeight,
+                        minWidth:
+                            widgets.confirmButtonConfig?.minWidth ?? minWidth,
+                        height:
+                            widgets.confirmButtonConfig?.height ?? buttonHeight,
                         color:
                             widgets.confirmButtonConfig?.color ?? Colors.blue,
                         shape: widgets.confirmButtonConfig?.shape ??
                             const StadiumBorder(),
                         onPressed: () {
                           String formattedTime =
-                              '${widget.selectedTime.hour}:${widget.selectedTime.minute.toString().padLeft(2, '0')} ${widget.selectedTime.period == DayPeriod.am ? 'صبح' : 'بعد از ظهر'}';
+                              '${_selectedTime.hour}:${_selectedTime.minute.toString().padLeft(2, '0')} ${_selectedTime.period == DayPeriod.am ? 'صبح' : 'بعد از ظهر'}';
+
+                          // Ensure the widget state is updated with the latest values
+                          widget.currentDate = _currentDate;
+                          widget.selectedTime = _selectedTime;
+
+                          // Return the current date and time
                           Navigator.of(context).pop({
-                            'date': widget.currentDate,
+                            'date': _currentDate,
                             'time': formattedTime,
                           });
                         },

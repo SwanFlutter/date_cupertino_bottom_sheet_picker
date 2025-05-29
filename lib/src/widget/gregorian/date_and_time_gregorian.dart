@@ -30,7 +30,7 @@ class DateAndTimeGregorian extends StatefulWidget {
   final Color dividerColor;
 
   /// A callback function that is called when the time is changed.
-  final Function(TimeOfDay) onTimeChanged;
+  final Function(TimeOfDay, DateTime) onTimeChanged;
 
   /// The date and time combined.
   final String timeAndDate;
@@ -70,6 +70,9 @@ class DateAndTimeGregorian extends StatefulWidget {
 class _DateAndTimeGregorianState extends State<DateAndTimeGregorian> {
   late String displayTimeAndDate;
 
+  // متغیر استاتیک که در کل برنامه حفظ می‌شود
+  static bool animationHasRunOnce = false;
+
   @override
   void initState() {
     super.initState();
@@ -77,32 +80,52 @@ class _DateAndTimeGregorianState extends State<DateAndTimeGregorian> {
   }
 
   @override
+  void didUpdateWidget(DateAndTimeGregorian oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentDate != widget.currentDate ||
+        oldWidget.selectedTime != widget.selectedTime) {
+      setState(() {
+        displayTimeAndDate =
+            viewFormatDateTimeFor(widget.currentDate, widget.selectedTime);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+
+    Widget dateTimeWidget;
+
+    // بررسی اینکه آیا انیمیشن قبلاً اجرا شده یا نه
+    if (!animationHasRunOnce) {
+      dateTimeWidget = FadeAnimationDelayed(
+        delay: const Duration(milliseconds: 700),
+        slideDirection: SlideDirection.rightToLeft,
+        child: buildDateTimeText(theme),
+        onCompleted: () {
+          // پس از اتمام انیمیشن، وضعیت استاتیک را بروز کنیم
+          animationHasRunOnce = true;
+        },
+      );
+    } else {
+      dateTimeWidget = buildDateTimeText(theme);
+    }
+
     return SingleChildScrollView(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          FadeAnimationDelayed(
-            delay: const Duration(milliseconds: 700),
-            slideDirection: SlideDirection.rightToLeft,
-            child: Text(
-              viewFormatDateTimeFor(widget.currentDate, widget.selectedTime),
-              style: TextStyle(
-                  fontSize: theme.textTheme.headlineSmall!.fontSize,
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.primary),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          dateTimeWidget,
           SizedBox(height: 10),
           Divider(
-              thickness: 1,
-              color: theme.colorScheme.primary,
-              indent: 0,
-              endIndent: 0),
+            thickness: 1,
+            color: theme.colorScheme.primary,
+            indent: 0,
+            endIndent: 0,
+          ),
           SizedBox(height: 10),
           SizedBox(
             height: 120,
@@ -110,40 +133,64 @@ class _DateAndTimeGregorianState extends State<DateAndTimeGregorian> {
               dividerColor: theme.colorScheme.primary,
               onTimeChanged: (String timeString) {
                 TimeOfDay time = stringToTimeOfDay(timeString);
-                widget.onTimeChanged(time);
-                setState(() {
+                if (widget.selectedTime != time) {
                   widget.selectedTime = time;
-                  displayTimeAndDate =
-                      time.viewFormatDateTimeFor(widget.currentDate, time);
-                });
+                  widget.onTimeChanged(time, widget.currentDate);
+                  setState(() {
+                    displayTimeAndDate = viewFormatDateTimeFor(
+                      widget.currentDate,
+                      time,
+                    );
+                  });
+                }
               },
-              initialTime: "8:00",
+              initialTime:
+                  "${widget.selectedTime.hour}:${widget.selectedTime.minute.toString().padLeft(2, '0')} ${widget.selectedTime.period == DayPeriod.am ? 'AM' : 'PM'}",
             ),
           ),
           SizedBox(height: 10),
           Divider(
-              thickness: 1,
-              color: theme.colorScheme.primary,
-              indent: 0,
-              endIndent: 0),
+            thickness: 1,
+            color: theme.colorScheme.primary,
+            indent: 0,
+            endIndent: 0,
+          ),
           SizedBox(height: 10),
           CalendarViewDate(
             minAge: widget.minAge,
-            selectedDate: widget.selectedDate,
+            selectedDate: widget.currentDate,
             firstDate: widget.firstDate,
             lastDate: widget.lastDate,
             dateCupertinoBottomSheetPicker:
                 widget.dateCupertinoBottomSheetPicker,
             onChange: (DateTime dateTime) {
-              if (mounted) {
+              if (mounted && widget.currentDate != dateTime) {
                 setState(() {
                   widget.currentDate = dateTime;
+                  displayTimeAndDate = viewFormatDateTimeFor(
+                    dateTime,
+                    widget.selectedTime,
+                  );
                 });
+                widget.onTimeChanged(widget.selectedTime, dateTime);
               }
             },
           ),
         ],
       ),
+    );
+  }
+
+  // Helper method to build the date-time text widget
+  Widget buildDateTimeText(ThemeData theme) {
+    return Text(
+      displayTimeAndDate,
+      style: TextStyle(
+        fontSize: theme.textTheme.headlineSmall!.fontSize,
+        fontWeight: FontWeight.w600,
+        color: theme.colorScheme.primary,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }

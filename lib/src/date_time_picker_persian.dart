@@ -149,6 +149,8 @@ class DateTimePickerPersian extends StatefulWidget {
   /// The decoration for the text field.
   final TextFieldDecoration? textFieldDecoration;
 
+  final Color? timeColorBottom;
+
   DateTimePickerPersian({
     super.key,
     ShapeBorder? shapeBottomSheet,
@@ -165,6 +167,7 @@ class DateTimePickerPersian extends StatefulWidget {
     this.dividerColor = Colors.black,
     this.confirmButtonConfig,
     this.cancelButtonConfig,
+    this.timeColorBottom,
     this.timeText = 'چه ساعتی؟',
     this.timeTextStyle = const TextStyle(
         fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
@@ -200,11 +203,25 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
   void initState() {
     super.initState();
 
+    // Initialize with the selected date from the widget
+    currentDate = widget.selectedDate;
+    selectedTime = TimeOfDay.now();
+
+    // Initialize the text controller
     DateTimePickerPersian.initializeDateFormattingIfNeeded().then((_) {
-      currentDate = widget.selectedDate;
-      selectedTime = TimeOfDay.now();
       controller.text = formatDateTimeForIranNew(currentDate, selectedTime);
     });
+  }
+
+  @override
+  void didUpdateWidget(DateTimePickerPersian oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedDate != oldWidget.selectedDate) {
+      setState(() {
+        currentDate = widget.selectedDate;
+        controller.text = formatDateTimeForIranNew(currentDate, selectedTime);
+      });
+    }
   }
 
   @override
@@ -301,28 +318,27 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
     if (result != null &&
         result.containsKey('date') &&
         result.containsKey('time')) {
-      setState(
-        () {
-          currentDate = result['date'] as Jalali;
+      Jalali returnedDate = result['date'] as Jalali;
+      String returnedTimeString = result['time'] as String;
 
-// Convert time string to TimeOfDay
-          selectedTime = stringToTimeOfDay(result['time'] as String);
+      setState(() {
+        // Update the current date and time with the returned values
+        currentDate = returnedDate;
+        selectedTime = stringToTimeOfDay(returnedTimeString);
 
-// Format date and time for display
-          controller.text = formatDateTimeForIranNew(currentDate, selectedTime);
+        // Update the controller text
+        controller.text = formatDateTimeForIranNew(currentDate, selectedTime);
 
-// Convert dateString to Jalali for use in callback
-
-// Call callback with correct Jalali
-          widget.onDateAndTimeChanged?.call(
-              currentDate,
-              currentDate.formatFullDate(),
-              currentDate.formatPersianFullDateWithDay(),
-              selectedTime,
-              selectedTime.formatPersianTime(),
-              selectedTime.formatPersianTimeNew());
-        },
-      );
+        // Call the callback with the updated values
+        widget.onDateAndTimeChanged?.call(
+          currentDate,
+          currentDate.formatFullDate(),
+          currentDate.formatPersianFullDateWithDay(),
+          selectedTime,
+          selectedTime.formatPersianTime(),
+          selectedTime.formatPersianTimeNew(),
+        );
+      });
     }
   }
 }
