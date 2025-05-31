@@ -36,5 +36,10 @@
 ## 0.0.8
 
 * Adding new features.
-* Update SDK.
-* Update OnChange.
+
+## 0.0.9 
+
+* Fix Bug.
+
+
+

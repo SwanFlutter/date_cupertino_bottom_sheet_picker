@@ -19,20 +19,15 @@ class TextFieldDecoration {
   final double iconSize;
   final String? labelText;
   final Color labelColor;
-  final Color labelErrorColor;
-  final Color labelHintColor;
   final String prefix;
   final TextStyle? prefixStyle;
   final TextStyle? style;
-  final Color textColor;
   final double widthBorder;
   final double widthEnabledBorder;
   final double widthFocusedBorder;
-  final Color labelTaxtColor;
 
   // New properties
   final Widget? suffixIcon;
-  final Color? suffixIconColor;
   final VoidCallback? suffixIconOnTap;
   final TextDirection? textDirection;
   final TextAlign? textAlign;
@@ -49,7 +44,6 @@ class TextFieldDecoration {
 
   TextFieldDecoration({
     this.border,
-    this.labelTaxtColor = Colors.black,
     this.borderColor = Colors.black,
     this.borderRadius = 12.0,
     this.cursorColor = Colors.black,
@@ -67,19 +61,15 @@ class TextFieldDecoration {
     this.iconSize = 24.0,
     this.labelText,
     this.labelColor = Colors.black,
-    this.labelErrorColor = Colors.red,
-    this.labelHintColor = Colors.black,
     this.prefix = '',
     this.prefixStyle = const TextStyle(fontSize: 20, color: Colors.black),
     this.style = const TextStyle(color: Colors.black),
-    this.textColor = Colors.black,
     this.widthBorder = 1.0,
     this.widthEnabledBorder = 1.0,
     this.widthFocusedBorder = 1.0,
 
     // New properties
     this.suffixIcon,
-    this.suffixIconColor,
     this.suffixIconOnTap,
     this.textDirection,
     this.textAlign = TextAlign.start,

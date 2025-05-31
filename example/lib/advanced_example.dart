@@ -109,7 +109,7 @@ class _AdvancedExampleState extends State<AdvancedExample> {
                 textAlign: TextAlign.right,
                 hintText: "تاریخ تولد خود را انتخاب کنید",
                 labelText: "تاریخ تولد",
-                labelColor: Colors.orange,
+                labelColor: Colors.orange, // حالا کار می‌کند!
                 style: const TextStyle(color: Colors.black, fontSize: 16),
                 borderColor: Colors.orange,
                 focusedBorderColor: Colors.deepOrange,
@@ -219,6 +219,7 @@ class _AdvancedExampleState extends State<AdvancedExample> {
                 icon: Icons.calendar_month_rounded, // آیکون گرد
                 iconColor: Colors.indigo,
                 iconSize: 26.0, // سایز متوسط
+                labelColor: Colors.indigo, // رنگ label
                 containerColor: Colors.indigo.shade50,
                 containerPadding: const EdgeInsets.all(4),
                 containerMargin: const EdgeInsets.symmetric(horizontal: 8),
