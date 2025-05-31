@@ -125,6 +125,10 @@ class _AdvancedExampleState extends State<AdvancedExample> {
                   child: const Icon(Icons.date_range,
                       color: Colors.orange, size: 20),
                 ),
+                // یا می‌توانید از icon و iconSize استفاده کنید:
+                // icon: Icons.date_range,
+                // iconColor: Colors.orange,
+                // iconSize: 28.0,
                 // اگر suffixIconOnTap تنظیم نشود، از عملکرد پیش‌فرض استفاده می‌کند
                 // suffixIconOnTap: null, // استفاده از عملکرد پیش‌فرض
               ),
@@ -162,6 +166,7 @@ class _AdvancedExampleState extends State<AdvancedExample> {
                 fillColor: Colors.transparent,
                 filled: true,
                 iconColor: Colors.white,
+                iconSize: 28.0, // آیکون بزرگ‌تر
                 gradient: const LinearGradient(
                   colors: [Colors.green, Colors.teal],
                   begin: Alignment.centerLeft,
@@ -211,6 +216,9 @@ class _AdvancedExampleState extends State<AdvancedExample> {
                 borderRadius: 25,
                 borderColor: Colors.indigo,
                 focusedBorderColor: Colors.indigoAccent,
+                icon: Icons.calendar_month_rounded, // آیکون گرد
+                iconColor: Colors.indigo,
+                iconSize: 26.0, // سایز متوسط
                 containerColor: Colors.indigo.shade50,
                 containerPadding: const EdgeInsets.all(4),
                 containerMargin: const EdgeInsets.symmetric(horizontal: 8),

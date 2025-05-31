@@ -33,3 +33,8 @@
 * Fix Bug PersianDatePicker.
 * Fix Bug GregorianDateTimePicker.
 
+## 0.0.8
+
+* Adding new features.
+* Update SDK.
+* Update OnChange.

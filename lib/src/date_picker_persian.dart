@@ -229,7 +229,8 @@ class _DatePickerPersianState extends State<DatePickerPersian>
             : InkResponse(
                 onTap: onShowCalendarClick,
                 child: Icon(widget.textFieldStyle.icon,
-                    color: widget.textFieldStyle.iconColor),
+                    color: widget.textFieldStyle.iconColor,
+                    size: widget.textFieldStyle.iconSize),
               ),
       ),
     );

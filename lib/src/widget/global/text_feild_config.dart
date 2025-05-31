@@ -16,6 +16,7 @@ class TextFieldDecoration {
   final Color hintColor;
   final IconData icon;
   final Color iconColor;
+  final double iconSize;
   final String? labelText;
   final Color labelColor;
   final Color labelErrorColor;
@@ -63,6 +64,7 @@ class TextFieldDecoration {
     this.hintColor = Colors.black,
     this.icon = Icons.calendar_month_rounded,
     this.iconColor = Colors.black,
+    this.iconSize = 24.0,
     this.labelText,
     this.labelColor = Colors.black,
     this.labelErrorColor = Colors.red,

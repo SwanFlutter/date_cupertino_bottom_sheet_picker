@@ -310,7 +310,8 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
                 child: Icon(
                     widget.textFieldDecoration?.icon ?? Icons.calendar_month,
                     color:
-                        widget.textFieldDecoration?.iconColor ?? Colors.black),
+                        widget.textFieldDecoration?.iconColor ?? Colors.black,
+                    size: widget.textFieldDecoration?.iconSize ?? 24.0),
               ),
       ),
     );

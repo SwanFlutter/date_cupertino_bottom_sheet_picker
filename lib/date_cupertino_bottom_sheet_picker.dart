@@ -445,7 +445,8 @@ class _DateCupertinoBottomSheetPickerState
                 child: Icon(
                     widget.textFieldDecoration?.icon ?? Icons.calendar_month,
                     color:
-                        widget.textFieldDecoration?.iconColor ?? Colors.black),
+                        widget.textFieldDecoration?.iconColor ?? Colors.black,
+                    size: widget.textFieldDecoration?.iconSize ?? 24.0),
               ),
       ),
     );
