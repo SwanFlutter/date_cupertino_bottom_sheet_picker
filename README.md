@@ -128,7 +128,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  date_cupertino_bottom_sheet_picker: ^0.0.9
+  date_cupertino_bottom_sheet_picker: ^0.1.0
 ```
 
 Then run:

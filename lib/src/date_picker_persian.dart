@@ -180,6 +180,7 @@ class _DatePickerPersianState extends State<DatePickerPersian>
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(
             vertical: widget.textFieldStyle.height, horizontal: 10),
+        isDense: widget.textFieldStyle.isDense,
         border: widget.textFieldStyle.border ??
             (widget.textFieldStyle.widthBorder == 0.0
                 ? InputBorder.none

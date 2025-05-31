@@ -388,6 +388,8 @@ class _DateCupertinoBottomSheetPickerState
         contentPadding: EdgeInsets.symmetric(
             vertical: widget.textFieldDecoration?.height ?? 15.0,
             horizontal: 10),
+        isDense:
+            widget.textFieldDecoration?.isDense ?? true, // کمک به تراز بهتر
         border: widget.textFieldDecoration?.border ??
             (widget.textFieldDecoration?.widthBorder == 0.0
                 ? InputBorder.none

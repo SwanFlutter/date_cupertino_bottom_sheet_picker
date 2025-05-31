@@ -177,6 +177,7 @@ class _DateTimePickerGregorianState extends State<DateTimePickerGregorian>
           vertical: widget.textFieldDecoration?.height ?? 15.0,
           horizontal: 10,
         ),
+        isDense: widget.textFieldDecoration?.isDense ?? true,
         border: widget.textFieldDecoration?.border ??
             (widget.textFieldDecoration?.widthBorder == 0.0
                 ? InputBorder.none

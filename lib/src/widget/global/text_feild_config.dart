@@ -10,6 +10,7 @@ class TextFieldDecoration {
   final Color errorColor;
   final bool? filled;
   final Color? fillColor;
+  final bool isDense;
   final Color focusedBorderColor;
   final double height;
   final String hintText;
@@ -52,6 +53,7 @@ class TextFieldDecoration {
     this.errorColor = Colors.red,
     this.filled = false,
     this.fillColor = Colors.white,
+    this.isDense = true,
     this.focusedBorderColor = Colors.black,
     this.height = 15.0,
     this.hintText = '',
