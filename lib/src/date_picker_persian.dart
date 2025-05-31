@@ -169,6 +169,97 @@ class _DatePickerPersianState extends State<DatePickerPersian>
 
   @override
   Widget build(BuildContext context) {
+    Widget textField = TextField(
+      readOnly: true,
+      textAlignVertical: TextAlignVertical.center,
+      textDirection: widget.textFieldStyle.textDirection,
+      textAlign: widget.textFieldStyle.textAlign ?? TextAlign.start,
+      controller: controller,
+      style: widget.textFieldStyle.style,
+      cursorColor: widget.textFieldStyle.cursorColor,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+            vertical: widget.textFieldStyle.height, horizontal: 10),
+        border: widget.textFieldStyle.border ??
+            (widget.textFieldStyle.widthBorder == 0.0
+                ? InputBorder.none
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        widget.textFieldStyle.borderRadius),
+                    borderSide: BorderSide(
+                        color: widget.textFieldStyle.borderColor,
+                        width: widget.textFieldStyle.widthBorder),
+                  )),
+        focusedBorder: widget.textFieldStyle.widthFocusedBorder == 0.0
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(widget.textFieldStyle.borderRadius),
+                borderSide: BorderSide(
+                    color: widget.textFieldStyle.focusedBorderColor,
+                    width: widget.textFieldStyle.widthFocusedBorder),
+              ),
+        enabledBorder: widget.textFieldStyle.widthEnabledBorder == 0.0
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(widget.textFieldStyle.borderRadius),
+                borderSide: BorderSide(
+                    color: widget.textFieldStyle.enabledBorderColor,
+                    width: widget.textFieldStyle.widthEnabledBorder),
+              ),
+        fillColor: widget.textFieldStyle.fillColor,
+        filled: widget.textFieldStyle.filled,
+        errorStyle: TextStyle(color: widget.textFieldStyle.errorColor),
+        hintText: widget.textFieldStyle.hintText,
+        hintStyle: TextStyle(color: widget.textFieldStyle.hintColor),
+        labelText: widget.textFieldStyle.labelText,
+        labelStyle: TextStyle(color: widget.textFieldStyle.labelColor),
+        errorText: widget.textFieldStyle.errorText,
+        prefix: Text(
+          widget.textFieldStyle.prefix.toString(),
+        ),
+        prefixStyle: widget.textFieldStyle.prefixStyle,
+        suffixIcon: widget.textFieldStyle.suffixIcon != null
+            ? GestureDetector(
+                onTap: widget.textFieldStyle.suffixIconOnTap ??
+                    onShowCalendarClick,
+                child: widget.textFieldStyle.suffixIcon,
+              )
+            : InkResponse(
+                onTap: onShowCalendarClick,
+                child: Icon(widget.textFieldStyle.icon,
+                    color: widget.textFieldStyle.iconColor),
+              ),
+      ),
+    );
+
+    // Wrap in container if decoration properties are provided
+    if (widget.textFieldStyle.containerDecoration != null ||
+        widget.textFieldStyle.gradient != null ||
+        widget.textFieldStyle.containerColor != null ||
+        widget.textFieldStyle.boxShadow != null ||
+        widget.textFieldStyle.containerPadding != null ||
+        widget.textFieldStyle.containerMargin != null ||
+        widget.textFieldStyle.containerWidth != null ||
+        widget.textFieldStyle.containerHeight != null) {
+      textField = Container(
+        width: widget.textFieldStyle.containerWidth,
+        height: widget.textFieldStyle.containerHeight,
+        padding: widget.textFieldStyle.containerPadding,
+        margin: widget.textFieldStyle.containerMargin,
+        decoration: widget.textFieldStyle.containerDecoration ??
+            BoxDecoration(
+              color: widget.textFieldStyle.containerColor,
+              gradient: widget.textFieldStyle.gradient,
+              borderRadius:
+                  BorderRadius.circular(widget.textFieldStyle.borderRadius),
+              boxShadow: widget.textFieldStyle.boxShadow,
+            ),
+        child: textField,
+      );
+    }
+
     return Container(
       alignment: Alignment.center,
       width: MediaQuery.of(context).size.width * widget.minWidth,
@@ -177,55 +268,7 @@ class _DatePickerPersianState extends State<DatePickerPersian>
           vertical: widget.paddingVertical,
           horizontal: widget.paddingHorizontal,
         ),
-        child: TextField(
-          readOnly: true,
-          textAlignVertical: TextAlignVertical.center,
-          controller: controller,
-          style: widget.textFieldStyle.style,
-          cursorColor: widget.textFieldStyle.cursorColor,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-                vertical: widget.textFieldStyle.height, horizontal: 10),
-            border: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(widget.textFieldStyle.borderRadius),
-              borderSide: BorderSide(
-                  color: widget.textFieldStyle.borderColor,
-                  width: widget.textFieldStyle.widthBorder),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(widget.textFieldStyle.borderRadius),
-              borderSide: BorderSide(
-                  color: widget.textFieldStyle.focusedBorderColor,
-                  width: widget.textFieldStyle.widthFocusedBorder),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(widget.textFieldStyle.borderRadius),
-              borderSide: BorderSide(
-                  color: widget.textFieldStyle.enabledBorderColor,
-                  width: widget.textFieldStyle.widthEnabledBorder),
-            ),
-            fillColor: widget.textFieldStyle.fillColor,
-            filled: widget.textFieldStyle.filled,
-            errorStyle: TextStyle(color: widget.textFieldStyle.errorColor),
-            hintText: widget.textFieldStyle.hintText,
-            hintStyle: TextStyle(color: widget.textFieldStyle.hintColor),
-            labelText: widget.textFieldStyle.labelText,
-            labelStyle: TextStyle(color: widget.textFieldStyle.labelHintColor),
-            errorText: widget.textFieldStyle.errorText,
-            prefix: Text(
-              widget.textFieldStyle.prefix.toString(),
-            ),
-            prefixStyle: widget.textFieldStyle.prefixStyle,
-            suffixIcon: InkResponse(
-              onTap: onShowCalendarClick,
-              child: Icon(widget.textFieldStyle.icon,
-                  color: widget.textFieldStyle.iconColor),
-            ),
-          ),
-        ),
+        child: textField,
       ),
     );
   }

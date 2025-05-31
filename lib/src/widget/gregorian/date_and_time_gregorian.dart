@@ -103,10 +103,6 @@ class _DateAndTimeGregorianState extends State<DateAndTimeGregorian> {
         delay: const Duration(milliseconds: 700),
         slideDirection: SlideDirection.rightToLeft,
         child: buildDateTimeText(theme),
-        onCompleted: () {
-          // پس از اتمام انیمیشن، وضعیت استاتیک را بروز کنیم
-          animationHasRunOnce = true;
-        },
       );
     } else {
       dateTimeWidget = buildDateTimeText(theme);

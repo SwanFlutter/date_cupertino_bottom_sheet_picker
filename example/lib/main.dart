@@ -1,5 +1,6 @@
 import 'package:date_cupertino_bottom_sheet_picker/date_cupertino_bottom_sheet_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:test_pack_date_cupertino/advanced_example.dart';
 import 'package:test_pack_date_cupertino/new.dart';
 
 void main() {
@@ -52,7 +53,16 @@ class Home extends StatelessWidget {
                 },
               ),
             ),
-          )
+          ),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AdvancedExample()),
+                );
+              },
+              child: const Text('test'))
         ],
       ),
       floatingActionButton: FloatingActionButton(

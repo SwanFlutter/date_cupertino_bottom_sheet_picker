@@ -20,26 +20,12 @@ A beautiful and customizable Cupertino-style date picker widget for Flutter that
 
 ## 📸 Screenshots
 
-### Basic Date Picker
-![SheetPicker](https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker/assets/151648897/5ed512a7-e56e-46dc-b501-fbc14727a9e0)
-
-### Persian Date & Time Picker
-![persian1](https://github.com/user-attachments/assets/3cb98fa6-2e37-4317-a430-70966be2af28)
-
-### Persian Date Picker
-![persian](https://github.com/user-attachments/assets/4dc68077-5e35-4812-9dca-dab19775d6b6)
-
-### Gregorian Date & Time Picker
-![gregorian1](https://github.com/user-attachments/assets/a59e25be-75e3-4bff-be88-2e7f481b04e1)
-
-### Gregorian Date Picker
-![gregorian](https://github.com/user-attachments/assets/73669ab1-a6e7-4d97-bc14-c44824dcc12b)
-
-
 
 ## 🚀 Quick Start
 
 ### Basic Usage
+
+![SheetPicker](https://github.com/SwanFlutter/date_cupertino_bottom_sheet_picker/assets/151648897/5ed512a7-e56e-46dc-b501-fbc14727a9e0)
 
 ```dart
 DateCupertinoBottomSheetPicker(
@@ -59,6 +45,8 @@ DateCupertinoBottomSheetPicker(
 
 ### Persian Date & Time Picker
 
+![persian1](https://github.com/user-attachments/assets/3cb98fa6-2e37-4317-a430-70966be2af28)
+
 ```dart
 DateCupertinoBottomSheetPicker.dateTimePickerPersian(
   minWidth: 0.9,
@@ -75,6 +63,8 @@ DateCupertinoBottomSheetPicker.dateTimePickerPersian(
 
 ### Persian Date Picker
 
+![persian](https://github.com/user-attachments/assets/4dc68077-5e35-4812-9dca-dab19775d6b6)
+
 ```dart
 DateCupertinoBottomSheetPicker.datePickerPersian(
   minWidth: 0.9,
@@ -88,6 +78,9 @@ DateCupertinoBottomSheetPicker.datePickerPersian(
 
 ### Gregorian Date & Time Picker
 
+![gregorian1](https://github.com/user-attachments/assets/a59e25be-75e3-4bff-be88-2e7f481b04e1)
+
+
 ```dart
 DateCupertinoBottomSheetPicker.dateTimePickerGregorian(
   minWidth: 0.9,
@@ -99,13 +92,43 @@ DateCupertinoBottomSheetPicker.dateTimePickerGregorian(
 )
 ```
 
+### Gregorian Date Picker
+
+![gregorian](https://github.com/user-attachments/assets/73669ab1-a6e7-4d97-bc14-c44824dcc12b)
+
+```dart
+
+Center(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: DateCupertinoBottomSheetPicker(
+                minWidth: 1.0,
+                firstDate: DateTime(1990),
+                lastDate: DateTime.now(),
+                selectedDate: selectedDate,
+                minAge: 18,
+                textFieldDecoration: TextFieldDecoration(),
+                onTimeChanged: (dateTime, formattedDate, formattedDateWithDay) {
+                  debugPrint(
+                      "dateTime: $dateTime, formattedDate: $formattedDate, formattedDateWithDay: $formattedDateWithDay");
+                },
+              ),
+            ),
+          ),
+
+```
+
+
+
+
+
 ## 📦 Installation
 
 Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  date_cupertino_bottom_sheet_picker: ^0.0.6
+  date_cupertino_bottom_sheet_picker: ^0.0.7
 ```
 
 Then run:

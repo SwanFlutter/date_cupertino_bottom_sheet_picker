@@ -107,9 +107,6 @@ class _TimeAndDatePersianState extends State<TimeAndDatePersian> {
         delay: const Duration(milliseconds: 700),
         slideDirection: SlideDirection.rightToLeft,
         child: buildDateTimeText(theme),
-        onCompleted: () {
-          animationHasRunOnce = true;
-        },
       );
     } else {
       dateTimeWidget = buildDateTimeText(theme);

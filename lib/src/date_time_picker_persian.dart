@@ -234,66 +234,114 @@ class _DateTimePickerPersianState extends State<DateTimePickerPersian> {
           vertical: widget.paddingVertical,
           horizontal: widget.paddingHorizontal,
         ),
-        child: TextField(
-          readOnly: true,
-          textAlignVertical: TextAlignVertical.center,
-          controller: controller,
-          style: widget.textFieldDecoration?.style ??
-              TextStyle(color: Colors.black),
-          cursorColor: widget.textFieldDecoration?.cursorColor,
-          decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-                vertical: widget.textFieldDecoration?.height ?? 15.0,
-                horizontal: 10),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                  widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(
-                  color:
-                      widget.textFieldDecoration?.borderColor ?? Colors.black,
-                  width: widget.textFieldDecoration?.widthBorder ?? 1.0),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                  widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(
-                  color: widget.textFieldDecoration?.focusedBorderColor ??
-                      Colors.black,
-                  width: widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                  widget.textFieldDecoration?.borderRadius ?? 12.0),
-              borderSide: BorderSide(
-                  color: widget.textFieldDecoration?.enabledBorderColor ??
-                      Colors.black,
-                  width: widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
-            ),
-            fillColor: widget.textFieldDecoration?.fillColor ?? Colors.white,
-            filled: widget.textFieldDecoration?.filled ?? true,
-            errorStyle:
-                TextStyle(color: widget.textFieldDecoration?.errorColor),
-            hintText: widget.textFieldDecoration?.hintText,
-            hintStyle: TextStyle(color: widget.textFieldDecoration?.hintColor),
-            labelText: widget.textFieldDecoration?.labelText,
-            labelStyle:
-                TextStyle(color: widget.textFieldDecoration?.labelTaxtColor),
-            errorText: widget.textFieldDecoration?.errorText,
-            prefix: Text(
-              widget.textFieldDecoration?.prefix ?? '',
-            ),
-            prefixStyle: widget.textFieldDecoration?.prefixStyle ??
-                TextStyle(fontSize: 20, color: Colors.black),
-            suffixIcon: InkResponse(
-              onTap: () => onShowCalendarClick(context),
-              child: Icon(
-                  widget.textFieldDecoration?.icon ?? Icons.calendar_month,
-                  color: widget.textFieldDecoration?.iconColor ?? Colors.black),
-            ),
-          ),
-        ),
+        child: _buildTextField(),
       ),
     );
+  }
+
+  Widget _buildTextField() {
+    Widget textField = TextField(
+      readOnly: true,
+      textAlignVertical: TextAlignVertical.center,
+      textDirection: widget.textFieldDecoration?.textDirection,
+      textAlign: widget.textFieldDecoration?.textAlign ?? TextAlign.start,
+      controller: controller,
+      style:
+          widget.textFieldDecoration?.style ?? TextStyle(color: Colors.black),
+      cursorColor: widget.textFieldDecoration?.cursorColor,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(
+            vertical: widget.textFieldDecoration?.height ?? 15.0,
+            horizontal: 10),
+        border: widget.textFieldDecoration?.border ??
+            (widget.textFieldDecoration?.widthBorder == 0.0
+                ? InputBorder.none
+                : OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                        widget.textFieldDecoration?.borderRadius ?? 12.0),
+                    borderSide: BorderSide(
+                        color: widget.textFieldDecoration?.borderColor ??
+                            Colors.black,
+                        width: widget.textFieldDecoration?.widthBorder ?? 1.0),
+                  )),
+        focusedBorder: widget.textFieldDecoration?.widthFocusedBorder == 0.0
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                    widget.textFieldDecoration?.borderRadius ?? 12.0),
+                borderSide: BorderSide(
+                    color: widget.textFieldDecoration?.focusedBorderColor ??
+                        Colors.black,
+                    width:
+                        widget.textFieldDecoration?.widthFocusedBorder ?? 1.0),
+              ),
+        enabledBorder: widget.textFieldDecoration?.widthEnabledBorder == 0.0
+            ? InputBorder.none
+            : OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                    widget.textFieldDecoration?.borderRadius ?? 12.0),
+                borderSide: BorderSide(
+                    color: widget.textFieldDecoration?.enabledBorderColor ??
+                        Colors.black,
+                    width:
+                        widget.textFieldDecoration?.widthEnabledBorder ?? 1.0),
+              ),
+        fillColor: widget.textFieldDecoration?.fillColor ?? Colors.white,
+        filled: widget.textFieldDecoration?.filled ?? true,
+        errorStyle: TextStyle(color: widget.textFieldDecoration?.errorColor),
+        hintText: widget.textFieldDecoration?.hintText,
+        hintStyle: TextStyle(color: widget.textFieldDecoration?.hintColor),
+        labelText: widget.textFieldDecoration?.labelText,
+        labelStyle: TextStyle(color: widget.textFieldDecoration?.labelColor),
+        errorText: widget.textFieldDecoration?.errorText,
+        prefix: Text(
+          widget.textFieldDecoration?.prefix ?? '',
+        ),
+        prefixStyle: widget.textFieldDecoration?.prefixStyle ??
+            TextStyle(fontSize: 20, color: Colors.black),
+        suffixIcon: widget.textFieldDecoration?.suffixIcon != null
+            ? GestureDetector(
+                onTap: widget.textFieldDecoration?.suffixIconOnTap ??
+                    () => onShowCalendarClick(context),
+                child: widget.textFieldDecoration!.suffixIcon,
+              )
+            : InkResponse(
+                onTap: () => onShowCalendarClick(context),
+                child: Icon(
+                    widget.textFieldDecoration?.icon ?? Icons.calendar_month,
+                    color:
+                        widget.textFieldDecoration?.iconColor ?? Colors.black),
+              ),
+      ),
+    );
+
+    // Wrap in container if decoration properties are provided
+    if (widget.textFieldDecoration?.containerDecoration != null ||
+        widget.textFieldDecoration?.gradient != null ||
+        widget.textFieldDecoration?.containerColor != null ||
+        widget.textFieldDecoration?.boxShadow != null ||
+        widget.textFieldDecoration?.containerPadding != null ||
+        widget.textFieldDecoration?.containerMargin != null ||
+        widget.textFieldDecoration?.containerWidth != null ||
+        widget.textFieldDecoration?.containerHeight != null) {
+      textField = Container(
+        width: widget.textFieldDecoration?.containerWidth,
+        height: widget.textFieldDecoration?.containerHeight,
+        padding: widget.textFieldDecoration?.containerPadding,
+        margin: widget.textFieldDecoration?.containerMargin,
+        decoration: widget.textFieldDecoration?.containerDecoration ??
+            BoxDecoration(
+              color: widget.textFieldDecoration?.containerColor,
+              gradient: widget.textFieldDecoration?.gradient,
+              borderRadius: BorderRadius.circular(
+                  widget.textFieldDecoration?.borderRadius ?? 12.0),
+              boxShadow: widget.textFieldDecoration?.boxShadow,
+            ),
+        child: textField,
+      );
+    }
+
+    return textField;
   }
 
   void onShowCalendarClick(BuildContext context) async {

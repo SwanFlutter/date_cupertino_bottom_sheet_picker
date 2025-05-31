@@ -14,3 +14,22 @@
 * Fix Bug dateTimePickerPersian ,dateTimePickerGregorian
 * Fix Bug UI.
 
+
+## 0.0.7
+
+* Fix Bug pub point.
+* Fix Bug TextFieldDecoration.
+* Fix Bug Button.
+* Fix Bug Border.
+* Fix Bug SuffixIcon.
+* Fix Bug Container.
+* Fix Bug Gradient.
+* Fix Bug BoxShadow.
+* Fix Bug TextDirection.
+* Fix Bug TextAlign.
+* Fix Bug ContainerProperties.
+* Fix Bug SuffixIcon.
+* Fix Bug PersianDateTimePicker.
+* Fix Bug PersianDatePicker.
+* Fix Bug GregorianDateTimePicker.
+

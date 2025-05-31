@@ -29,6 +29,23 @@ class TextFieldDecoration {
   final double widthFocusedBorder;
   final Color labelTaxtColor;
 
+  // New properties
+  final Widget? suffixIcon;
+  final Color? suffixIconColor;
+  final VoidCallback? suffixIconOnTap;
+  final TextDirection? textDirection;
+  final TextAlign? textAlign;
+
+  // Container properties
+  final EdgeInsetsGeometry? containerPadding;
+  final EdgeInsetsGeometry? containerMargin;
+  final double? containerWidth;
+  final double? containerHeight;
+  final BoxDecoration? containerDecoration;
+  final Gradient? gradient;
+  final List<BoxShadow>? boxShadow;
+  final Color? containerColor;
+
   TextFieldDecoration({
     this.border,
     this.labelTaxtColor = Colors.black,
@@ -57,5 +74,22 @@ class TextFieldDecoration {
     this.widthBorder = 1.0,
     this.widthEnabledBorder = 1.0,
     this.widthFocusedBorder = 1.0,
+
+    // New properties
+    this.suffixIcon,
+    this.suffixIconColor,
+    this.suffixIconOnTap,
+    this.textDirection,
+    this.textAlign = TextAlign.start,
+
+    // Container properties
+    this.containerPadding,
+    this.containerMargin,
+    this.containerWidth,
+    this.containerHeight,
+    this.containerDecoration,
+    this.gradient,
+    this.boxShadow,
+    this.containerColor,
   });
 }
